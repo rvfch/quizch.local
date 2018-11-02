@@ -14,7 +14,8 @@
                                 </div>
                                 <div class="modal-body">
                                     <label for="newQuestionText">Question text: </label>
-                                    <input type="text" name="newQuestionText" id="newQuestionText" v-model="questionText" class="form-control mb-2">
+                                    <input type="text" name="newQuestionText" id="newQuestionText" v-model="questionText"
+                                        class="form-control mb-2">
 
                                     <label>Answers: </label>
 
@@ -24,8 +25,6 @@
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-success" :disabled="answers[index].correct == 1"
                                                 @click="selectAnswer(index)"><i class="fas fa-check"></i></button>
-                                            <button type="button" class="btn btn-danger" :disabled="answers[index].correct == 0"
-                                                @click="selectAnswer(index)"><i class="fas fa-times"></i></button>
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-sm btn-primary mt-2" v-if="addAnswerButton"
@@ -41,11 +40,24 @@
                 </div>
             </transition>
         </div>
-        <div class="form-group row">
-            <label for="email" class="col-sm-4 col-form-label text-md-right">Questions:</label>
+        <div class="container">
+            <div class="row-justify-conent-md-center">
+                <div class="row">
+                    <label class="col-form-label mr-2">Title: </label>
+                    <input type="text" class="form-control col-md-4">
+                </div>
+                <div class="row">
+                    <label class="col-form-label">Questions:</label>
 
-            <div class="col-md-6">
-                <button id="show-modal" class="btn btn-sm btn-primary mt-2" @click="showModal = true">Add question</button>
+                    <div class="col-md-6">
+                        <p v-if="questions" v-for="question in questions" :key="question.id">{{ question.text }}</p>
+                        <button id="show-modal" class="btn btn-sm btn-primary mt-2" @click="showModal = true">Add
+                            question</button>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <button type="button" class="btn btn-success">Create quiz</button>
+                </div>
             </div>
         </div>
     </div>
@@ -62,8 +74,8 @@
             return {
                 answers: [],
                 questions: [],
-                questionText: '',
                 showModal: false,
+                questionText: '',
                 maxAnswersCount: 4,
                 minAnswersCount: 2,
                 addAnswerButton: true
@@ -82,8 +94,18 @@
                 }
             },
             saveQuestion() {
-                console.log(this.questionText);
-                console.log(this.answers);
+                this.questions.push({
+                    id: '',
+                    text: this.questionText
+                });
+                this.questionText = '';
+                this.answers = [];
+                this.answers.push({
+                    text: '',
+                    correct: 1
+                });
+                this.addNewAnswer();
+                this.addAnswerButton = true;
             },
             selectAnswer(index) {
                 for (let i in this.answers) {
