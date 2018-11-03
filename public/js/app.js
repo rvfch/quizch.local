@@ -48361,10 +48361,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 Vue.component('modal', {
     template: '#newQuestionModal'
@@ -48382,7 +48378,7 @@ Vue.component('modal', {
             maxAnswersCount: 4,
             minAnswersCount: 2,
             addAnswerButton: true,
-            isPrivate: 0,
+            isPrivate: false,
             quizTitle: '',
             quiz: {
                 id: '',
@@ -48434,6 +48430,7 @@ Vue.component('modal', {
             this.quiz.user_id = this.user_id;
             this.quiz.questions_count = this.questions.length;
             this.quiz.private = this.isPrivate;
+
             this.quiz.questions = this.questions;
             fetch('/api/quiz', {
                 method: 'post',
@@ -48715,63 +48712,27 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-sm-4" }, [
-          _c("div", { staticClass: "btn-group btn-group-toggle" }, [
-            _c(
-              "label",
-              {
-                staticClass: "btn btn-success ",
-                class: { active: _vm.isPrivate === 0 }
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-large ",
+              class: {
+                "btn-danger": _vm.isPrivate,
+                "btn-success": !_vm.isPrivate
               },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.isPrivate,
-                      expression: "isPrivate"
-                    }
-                  ],
-                  attrs: { type: "radio", id: "typepublic", value: "0" },
-                  domProps: { checked: _vm._q(_vm.isPrivate, "0") },
-                  on: {
-                    change: function($event) {
-                      _vm.isPrivate = "0"
-                    }
-                  }
-                }),
-                _vm._v(" Public\n                        ")
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "label",
-              {
-                staticClass: "btn btn-danger",
-                class: { active: _vm.isPrivate === 1 }
-              },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.isPrivate,
-                      expression: "isPrivate"
-                    }
-                  ],
-                  attrs: { type: "radio", id: "typeprivate", value: "1" },
-                  domProps: { checked: _vm._q(_vm.isPrivate, "1") },
-                  on: {
-                    change: function($event) {
-                      _vm.isPrivate = "1"
-                    }
-                  }
-                }),
-                _vm._v(" Private\n                        ")
-              ]
-            )
-          ])
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  _vm.isPrivate = !_vm.isPrivate
+                }
+              }
+            },
+            [
+              _vm.isPrivate == false
+                ? _c("i", { staticClass: "fas fa-lock-open" })
+                : _c("i", { staticClass: "fas fa-lock" })
+            ]
+          )
         ])
       ]),
       _vm._v(" "),

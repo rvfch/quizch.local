@@ -56,14 +56,10 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Type: </label>
                     <div class="col-sm-4">
-                        <div class="btn-group btn-group-toggle">
-                            <label class="btn btn-success " :class="{'active': isPrivate === 0}">
-                                <input type="radio" id="typepublic" value="0" v-model="isPrivate"> Public
-                            </label>
-                            <label class="btn btn-danger" :class="{'active': isPrivate === 1}">
-                                <input type="radio" id="typeprivate" value="1" v-model="isPrivate"> Private
-                            </label>
-                        </div>
+                        <button type="button" class="btn btn-large " @click="isPrivate = !isPrivate" :class="{'btn-danger': isPrivate, 'btn-success': !isPrivate}">
+                                <i v-if="isPrivate == false" class="fas fa-lock-open"></i>
+                                <i v-else class="fas fa-lock"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -106,7 +102,7 @@
                 maxAnswersCount: 4,
                 minAnswersCount: 2,
                 addAnswerButton: true,
-                isPrivate: 0,
+                isPrivate: false,
                 quizTitle: '',
                 quiz: {
                     id: '',
@@ -157,6 +153,7 @@
                 this.quiz.user_id = this.user_id;
                 this.quiz.questions_count = this.questions.length;
                 this.quiz.private = this.isPrivate;
+                
                 this.quiz.questions = this.questions;
                 fetch('/api/quiz', {
                             method: 'post',
