@@ -47626,27 +47626,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'myquizzes',
     props: ['user_id'],
     data: function data() {
         return {
-            quizzes: []
+            quizzes: [],
+            pagination: {}
         };
     },
 
     methods: {
-        fetchQuizzes: function fetchQuizzes() {
+        fetchQuizzes: function fetchQuizzes(pageUrl) {
             var _this = this;
 
-            fetch('/api/quizzes/' + this.user_id).then(function (res) {
+            var app = this;
+            pageUrl = pageUrl || '/api/quizzes/' + this.user_id;
+            fetch(pageUrl).then(function (res) {
                 return res.json();
             }).then(function (res) {
                 _this.quizzes = res.data;
+                app.makePagination(res.meta, res.links);
             }).catch(function (err) {
                 return console.log(err);
             });
+        },
+        makePagination: function makePagination(meta, links) {
+            var pagination = {
+                currentPage: meta.current_page,
+                lastPage: meta.last_page,
+                nextPageUrl: links.next,
+                prevPageUrl: links.prev
+            };
+
+            this.pagination = pagination;
         },
         privateQuiz: function privateQuiz(index, state) {
             var _this2 = this;
@@ -47662,7 +47682,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }).then(function (res) {
                     return res.json();
                 }).then(function (data) {
-                    _this2.fetchQuizzes();
+                    _this2.fetchQuizzes(_this2.pagination.currentPage);
                 }).catch(function (err) {
                     return console.log(err);
                 });
@@ -47677,7 +47697,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }).then(function (res) {
                     return res.json();
                 }).then(function (data) {
-                    _this2.fetchQuizzes();
+                    _this2.fetchQuizzes(_this2.pagination.currentPage);
                 }).catch(function (err) {
                     return console.log(err);
                 });
@@ -47691,7 +47711,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (res) {
                 return res.json();
             }).then(function (data) {
-                _this3.fetchQuizzes();
+                _this3.fetchQuizzes(_this3.pagination.currentPage);
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -47718,8 +47738,6 @@ var render = function() {
         "tbody",
         _vm._l(this.quizzes, function(quiz, index) {
           return _c("tr", { key: quiz.id }, [
-            _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(index + 1))]),
-            _vm._v(" "),
             _c("td", [
               _c("a", { attrs: { href: "/quiz/" + quiz.id } }, [
                 _c("strong", [_vm._v(_vm._s(quiz.title))])
@@ -47776,6 +47794,56 @@ var render = function() {
           ])
         })
       )
+    ]),
+    _vm._v(" "),
+    _c("nav", [
+      _c("ul", { staticClass: "pagination" }, [
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: [{ disabled: !_vm.pagination.prevPageUrl }]
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.fetchQuizzes(_vm.pagination.prevPageUrl)
+                  }
+                }
+              },
+              [_vm._v("Previous")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: [{ disabled: !_vm.pagination.nextPageUrl }]
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.fetchQuizzes(_vm.pagination.nextPageUrl)
+                  }
+                }
+              },
+              [_vm._v("Next")]
+            )
+          ]
+        )
+      ])
     ])
   ])
 }
@@ -47786,8 +47854,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
-        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Title")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Created at")]),
