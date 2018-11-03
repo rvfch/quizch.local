@@ -48361,6 +48361,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 Vue.component('modal', {
     template: '#newQuestionModal'
@@ -48380,6 +48382,7 @@ Vue.component('modal', {
             addAnswerButton: true,
             isPrivate: false,
             quizTitle: '',
+            quizPassword: '',
             quiz: {
                 id: '',
                 title: '',
@@ -48387,7 +48390,8 @@ Vue.component('modal', {
                 questions_count: '',
                 private: '',
                 crated_at: '',
-                questions: []
+                questions: [],
+                password: ''
             }
         };
     },
@@ -48732,7 +48736,31 @@ var render = function() {
                 ? _c("i", { staticClass: "fas fa-lock-open" })
                 : _c("i", { staticClass: "fas fa-lock" })
             ]
-          )
+          ),
+          _vm._v(" "),
+          _vm.isPrivate
+            ? _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.quizPassword,
+                    expression: "quizPassword"
+                  }
+                ],
+                staticClass: "form-control mt-2",
+                attrs: { type: "text", placeholder: "Password..." },
+                domProps: { value: _vm.quizPassword },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.quizPassword = $event.target.value
+                  }
+                }
+              })
+            : _vm._e()
         ])
       ]),
       _vm._v(" "),

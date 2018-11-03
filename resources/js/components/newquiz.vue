@@ -60,7 +60,9 @@
                                 <i v-if="isPrivate == false" class="fas fa-lock-open"></i>
                                 <i v-else class="fas fa-lock"></i>
                         </button>
+                        <input v-if="isPrivate" v-model="quizPassword" type="text" class="form-control mt-2" placeholder="Password...">
                     </div>
+                        
                 </div>
                 <div class="form-group row">
                     <label v-if="questions.length > 0" class="col-sm-2 col-form-label">Questions: </label>
@@ -104,6 +106,7 @@
                 addAnswerButton: true,
                 isPrivate: false,
                 quizTitle: '',
+                quizPassword: '',
                 quiz: {
                     id: '',
                     title: '',
@@ -112,6 +115,7 @@
                     private: '',
                     crated_at: '',
                     questions: [],
+                    password: ''
                 }
             }
         },
