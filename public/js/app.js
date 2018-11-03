@@ -47682,7 +47682,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }).then(function (res) {
                     return res.json();
                 }).then(function (data) {
-                    _this2.fetchQuizzes(_this2.pagination.currentPage);
+                    _this2.fetchQuizzes('/api/quizzes/' + _this2.user_id + '?page=' + _this2.pagination.currentPage);
                 }).catch(function (err) {
                     return console.log(err);
                 });
@@ -47697,7 +47697,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }).then(function (res) {
                     return res.json();
                 }).then(function (data) {
-                    _this2.fetchQuizzes(_this2.pagination.currentPage);
+                    _this2.fetchQuizzes('/api/quizzes/' + _this2.user_id + '?page=' + _this2.pagination.currentPage);
                 }).catch(function (err) {
                     return console.log(err);
                 });
@@ -47706,13 +47706,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteQuiz: function deleteQuiz(quiz_id) {
             var _this3 = this;
 
-            console.log(quiz_id);
             fetch('/api/quiz/' + quiz_id, {
                 method: 'delete'
             }).then(function (res) {
                 return res.json();
             }).then(function (data) {
-                _this3.fetchQuizzes(_this3.pagination.currentPage);
+                _this3.fetchQuizzes('/api/quizzes/' + _this3.user_id + '?page=' + _this3.pagination.currentPage);
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -47821,6 +47820,21 @@ var render = function() {
             )
           ]
         ),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item disabled" }, [
+          _c(
+            "a",
+            { staticClass: "page-link text-dark", attrs: { href: "#" } },
+            [
+              _vm._v(
+                "Page " +
+                  _vm._s(_vm.pagination.currentPage) +
+                  " of " +
+                  _vm._s(_vm.pagination.lastPage)
+              )
+            ]
+          )
+        ]),
         _vm._v(" "),
         _c(
           "li",
@@ -48512,7 +48526,7 @@ Vue.component('modal', {
             }).then(function (res) {
                 return res.json();
             }).then(function (data) {
-                console.log("quiz created");
+                alert("Quiz created");
             }).catch(function (err) {
                 return console.log(err);
             });

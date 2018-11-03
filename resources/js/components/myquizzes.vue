@@ -35,7 +35,7 @@
         <nav>
             <ul class="pagination">
                 <li :class="[{disabled: !pagination.prevPageUrl}]" class="page-item"><a @click="fetchQuizzes(pagination.prevPageUrl);" class="page-link" href="#">Previous</a></li>
-
+                <li class="page-item disabled"><a class="page-link text-dark" href="#">Page {{ pagination.currentPage }} of {{ pagination.lastPage }}</a></li>
                 <li :class="[{disabled: !pagination.nextPageUrl}]" class="page-item"><a @click="fetchQuizzes(pagination.nextPageUrl);" class="page-link" href="#">Next</a></li>
             </ul>
         </nav>
@@ -89,7 +89,7 @@
                         })
                         .then(res => res.json())
                         .then(data => {
-                            this.fetchQuizzes(this.pagination.currentPage);
+                            this.fetchQuizzes('/api/quizzes/'+this.user_id+'?page='+this.pagination.currentPage);
                         })
                         .catch(err => console.log(err));
                 } else {
@@ -103,19 +103,18 @@
                         })
                         .then(res => res.json())
                         .then(data => {
-                            this.fetchQuizzes(this.pagination.currentPage);
+                            this.fetchQuizzes('/api/quizzes/'+this.user_id+'?page='+this.pagination.currentPage);
                         })
                         .catch(err => console.log(err));
                 }
             },
             deleteQuiz(quiz_id) {
-                console.log(quiz_id);
                 fetch('/api/quiz/' + quiz_id, {
                         method: 'delete'
                     })
                     .then(res => res.json())
                     .then(data => {
-                        this.fetchQuizzes(this.pagination.currentPage);
+                        this.fetchQuizzes('/api/quizzes/'+this.user_id+'?page='+this.pagination.currentPage);
                     })
                     .catch(err => console.log(err));
             }

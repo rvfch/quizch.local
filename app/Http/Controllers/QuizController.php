@@ -97,6 +97,6 @@ class QuizController extends Controller
         $questions->delete();
         $quiz->delete();
 
-        return "OK";
+        return new QuizResource($quiz);
     }
 }

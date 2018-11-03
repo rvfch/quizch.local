@@ -53,6 +53,11 @@
                         <li class="nav-item mr-2">
                             <a class="nav-link" href="{{ url('/settings') }}"><i class="fas fa-sliders-h"></i> Settings</a>
                         </li>
+                        @if(Auth::user()->isAdmin)
+                        <li class="nav-item mr-2">
+                            <a href="{{ url('/admin') }}" class="nav-link">Admin panel</a>
+                        </li>
+                        @endif
                         @endauth
                     </ul>
 

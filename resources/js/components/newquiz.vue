@@ -168,7 +168,7 @@
                         })
                         .then(res => res.json())
                         .then(data => {
-                            console.log("quiz created");
+                            alert("Quiz created");
                         })
                         .catch(err => console.log(err));
             }
