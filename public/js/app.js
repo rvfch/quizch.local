@@ -48365,7 +48365,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 Vue.component('modal', {
     template: '#newQuestionModal'
@@ -48733,13 +48732,7 @@ var render = function() {
                       expression: "isPrivate"
                     }
                   ],
-                  attrs: {
-                    type: "radio",
-                    id: "typepublic",
-                    autocomplete: "off",
-                    checked: "",
-                    value: "0"
-                  },
+                  attrs: { type: "radio", id: "typepublic", value: "0" },
                   domProps: { checked: _vm._q(_vm.isPrivate, "0") },
                   on: {
                     change: function($event) {
@@ -48767,12 +48760,7 @@ var render = function() {
                       expression: "isPrivate"
                     }
                   ],
-                  attrs: {
-                    type: "radio",
-                    id: "typeprivate",
-                    autocomplete: "off",
-                    value: "1"
-                  },
+                  attrs: { type: "radio", id: "typeprivate", value: "1" },
                   domProps: { checked: _vm._q(_vm.isPrivate, "1") },
                   on: {
                     change: function($event) {
@@ -48844,8 +48832,7 @@ var render = function() {
             }
           },
           [_vm._v("Create quiz")]
-        ),
-        _vm._v("\n\n                " + _vm._s(this.quiz) + "\n            ")
+        )
       ])
     ])
   ])

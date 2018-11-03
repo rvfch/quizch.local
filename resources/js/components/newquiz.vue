@@ -58,10 +58,10 @@
                     <div class="col-sm-4">
                         <div class="btn-group btn-group-toggle">
                             <label class="btn btn-success " :class="{'active': isPrivate === 0}">
-                                <input type="radio" id="typepublic" autocomplete="off" checked value="0" v-model="isPrivate"> Public
+                                <input type="radio" id="typepublic" value="0" v-model="isPrivate"> Public
                             </label>
                             <label class="btn btn-danger" :class="{'active': isPrivate === 1}">
-                                <input type="radio" id="typeprivate" autocomplete="off" value="1" v-model="isPrivate"> Private
+                                <input type="radio" id="typeprivate" value="1" v-model="isPrivate"> Private
                             </label>
                         </div>
                     </div>
@@ -84,7 +84,6 @@
                 <div class="form-group row">
                     <button type="button" class="btn btn-success" @click="createQuiz()">Create quiz</button>
 
-                    {{ this.quiz }}
                 </div>
         </div>
     </div>
