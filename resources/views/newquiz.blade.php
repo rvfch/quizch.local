@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <newquiz></newquiz>
+            <newquiz :user_id="{{ Auth::id() }}"></newquiz>
         </div>
     </div>
 </div>

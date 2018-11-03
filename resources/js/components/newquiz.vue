@@ -15,13 +15,13 @@
                                 <div class="modal-body">
                                     <label for="newQuestionText">Question text: </label>
                                     <input type="text" name="newQuestionText" id="newQuestionText" v-model="questionText"
-                                        class="form-control mb-2">
+                                        class="form-control mb-2" required>
 
                                     <label>Answers: </label>
 
                                     <div class="input-group mb-2" v-for="(answer, index) in answers" :key="index">
                                         <input type="text" :name="'newQuestionAnswer'+(index)" v-model="answers[index].text"
-                                            class="form-control">
+                                            class="form-control" required>
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-success" :disabled="answers[index].correct == 1"
                                                 @click="selectAnswer(index)"><i class="fas fa-check"></i></button>
@@ -41,24 +41,51 @@
             </transition>
         </div>
         <div class="container">
-            <div class="row-justify-conent-md-center">
-                <div class="row">
-                    <label class="col-form-label mr-2">Title: </label>
-                    <input type="text" class="form-control col-md-4">
-                </div>
-                <div class="row">
-                    <label class="col-form-label">Questions:</label>
-
-                    <div class="col-md-6">
-                        <p v-if="questions" v-for="question in questions" :key="question.id">{{ question.text }}</p>
-                        <button id="show-modal" class="btn btn-sm btn-primary mt-2" @click="showModal = true">Add
-                            question</button>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Title: </label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="My new quiz..." required v-model="quizTitle">
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <button type="button" class="btn btn-success">Create quiz</button>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Time (minutes): </label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="60" required>
+                    </div>
                 </div>
-            </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Type: </label>
+                    <div class="col-sm-4">
+                        <div class="btn-group btn-group-toggle">
+                            <label class="btn btn-success " :class="{'active': isPrivate === 0}">
+                                <input type="radio" id="typepublic" autocomplete="off" checked value="0" v-model="isPrivate"> Public
+                            </label>
+                            <label class="btn btn-danger" :class="{'active': isPrivate === 1}">
+                                <input type="radio" id="typeprivate" autocomplete="off" value="1" v-model="isPrivate"> Private
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label v-if="questions.length > 0" class="col-sm-2 col-form-label">Questions: </label>
+                    <div class="col-sm-4">
+                        <ul class="list-group">
+                            <li class="list-group-item" v-if="questions" v-for="question in questions" :key="question.id">
+                                {{
+                                question.text }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <button id="show-modal" class="btn btn-sm btn-primary mt-2" @click="showModal = true">Add
+                        question</button>
+                </div>
+                
+                <div class="form-group row">
+                    <button type="button" class="btn btn-success" @click="createQuiz()">Create quiz</button>
+
+                    {{ this.quiz }}
+                </div>
         </div>
     </div>
 </template>
@@ -70,15 +97,27 @@
 
     export default {
         name: 'newQuiz',
+        props: ['user_id'],
         data() {
             return {
-                answers: [],
                 questions: [],
+                answers: [],
                 showModal: false,
                 questionText: '',
                 maxAnswersCount: 4,
                 minAnswersCount: 2,
-                addAnswerButton: true
+                addAnswerButton: true,
+                isPrivate: 0,
+                quizTitle: '',
+                quiz: {
+                    id: '',
+                    title: '',
+                    user_id: '',
+                    questions_count: '',
+                    private: '',
+                    crated_at: '',
+                    questions: [],
+                }
             }
         },
         methods: {
@@ -96,7 +135,8 @@
             saveQuestion() {
                 this.questions.push({
                     id: '',
-                    text: this.questionText
+                    text: this.questionText,
+                    answers: this.answers
                 });
                 this.questionText = '';
                 this.answers = [];
@@ -112,6 +152,25 @@
                     this.answers[i].correct = 0;
                 }
                 this.answers[index].correct = 1;
+            },
+            createQuiz() {
+                this.quiz.title = this.quizTitle;
+                this.quiz.user_id = this.user_id;
+                this.quiz.questions_count = this.questions.length;
+                this.quiz.private = this.isPrivate;
+                this.quiz.questions = this.questions;
+                fetch('/api/quiz', {
+                            method: 'post',
+                            body: JSON.stringify(this.quiz),
+                            headers: {
+                                'content-type': 'application/json'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log("quiz created");
+                        })
+                        .catch(err => console.log(err));
             }
         },
         mounted() {

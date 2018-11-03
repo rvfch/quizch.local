@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Quiz;
+use App\Question;
+use App\QuestionAnswer;
 use App\Http\Resources\Quiz as QuizResource;
 
 class QuizController extends Controller
@@ -45,12 +47,23 @@ class QuizController extends Controller
         $quiz->answers_count = $request->input('questions_count');
         $quiz->isPrivate = $request->input('private');
 
+        $quiz->save();
+        $questionTemp = [];
+        foreach($request->input('questions') as $i => $question) {
+            
+            $questionTemp[$i] = new Question(['quiz_id' => $quiz->id, 'question_text' => $question['text']]);
+        }
+        $quiz->questions()->saveMany($questionTemp);
 
-        if($quiz->save())
-        {
-        	return new QuizResource($quiz);
+        foreach($request->input('questions') as $i => $question) {
+            $answerTemp = [];
+            foreach($question['answers'] as $j => $answer) {
+                $answerTemp[$j] = new QuestionAnswer(['question_id' => $questionTemp[$i]->id, 'answer' => $answer['text'], 'correct' => $answer['correct']]);
+            }
+            $questionTemp[$i]->answers()->saveMany($answerTemp);
         }
 
+        return new QuizResource($quiz);
 
     }
 

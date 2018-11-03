@@ -48339,6 +48339,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 Vue.component('modal', {
     template: '#newQuestionModal'
@@ -48346,15 +48373,27 @@ Vue.component('modal', {
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'newQuiz',
+    props: ['user_id'],
     data: function data() {
         return {
-            answers: [],
             questions: [],
+            answers: [],
             showModal: false,
             questionText: '',
             maxAnswersCount: 4,
             minAnswersCount: 2,
-            addAnswerButton: true
+            addAnswerButton: true,
+            isPrivate: 0,
+            quizTitle: '',
+            quiz: {
+                id: '',
+                title: '',
+                user_id: '',
+                questions_count: '',
+                private: '',
+                crated_at: '',
+                questions: []
+            }
         };
     },
 
@@ -48373,7 +48412,8 @@ Vue.component('modal', {
         saveQuestion: function saveQuestion() {
             this.questions.push({
                 id: '',
-                text: this.questionText
+                text: this.questionText,
+                answers: this.answers
             });
             this.questionText = '';
             this.answers = [];
@@ -48389,6 +48429,26 @@ Vue.component('modal', {
                 this.answers[i].correct = 0;
             }
             this.answers[index].correct = 1;
+        },
+        createQuiz: function createQuiz() {
+            this.quiz.title = this.quizTitle;
+            this.quiz.user_id = this.user_id;
+            this.quiz.questions_count = this.questions.length;
+            this.quiz.private = this.isPrivate;
+            this.quiz.questions = this.questions;
+            fetch('/api/quiz', {
+                method: 'post',
+                body: JSON.stringify(this.quiz),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                console.log("quiz created");
+            }).catch(function (err) {
+                return console.log(err);
+            });
         }
     },
     mounted: function mounted() {
@@ -48469,7 +48529,8 @@ var render = function() {
                               attrs: {
                                 type: "text",
                                 name: "newQuestionText",
-                                id: "newQuestionText"
+                                id: "newQuestionText",
+                                required: ""
                               },
                               domProps: { value: _vm.questionText },
                               on: {
@@ -48501,7 +48562,8 @@ var render = function() {
                                     staticClass: "form-control",
                                     attrs: {
                                       type: "text",
-                                      name: "newQuestionAnswer" + index
+                                      name: "newQuestionAnswer" + index,
+                                      required: ""
                                     },
                                     domProps: {
                                       value: _vm.answers[index].text
@@ -48612,45 +48674,178 @@ var render = function() {
       : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row-justify-conent-md-center" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("label", { staticClass: "col-form-label" }, [
-            _vm._v("Questions:")
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-6" },
-            [
-              _vm._l(_vm.questions, function(question) {
-                return _vm.questions
-                  ? _c("p", { key: question.id }, [
-                      _vm._v(_vm._s(question.text))
-                    ])
-                  : _vm._e()
-              }),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-sm btn-primary mt-2",
-                  attrs: { id: "show-modal" },
-                  on: {
-                    click: function($event) {
-                      _vm.showModal = true
-                    }
-                  }
-                },
-                [_vm._v("Add\n                        question")]
-              )
-            ],
-            2
-          )
+      _c("div", { staticClass: "form-group row" }, [
+        _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+          _vm._v("Title: ")
         ]),
         _vm._v(" "),
-        _vm._m(1)
+        _c("div", { staticClass: "col-sm-4" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.quizTitle,
+                expression: "quizTitle"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              placeholder: "My new quiz...",
+              required: ""
+            },
+            domProps: { value: _vm.quizTitle },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.quizTitle = $event.target.value
+              }
+            }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group row" }, [
+        _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+          _vm._v("Type: ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-4" }, [
+          _c("div", { staticClass: "btn-group btn-group-toggle" }, [
+            _c(
+              "label",
+              {
+                staticClass: "btn btn-success ",
+                class: { active: _vm.isPrivate === 0 }
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.isPrivate,
+                      expression: "isPrivate"
+                    }
+                  ],
+                  attrs: {
+                    type: "radio",
+                    id: "typepublic",
+                    autocomplete: "off",
+                    checked: "",
+                    value: "0"
+                  },
+                  domProps: { checked: _vm._q(_vm.isPrivate, "0") },
+                  on: {
+                    change: function($event) {
+                      _vm.isPrivate = "0"
+                    }
+                  }
+                }),
+                _vm._v(" Public\n                        ")
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "label",
+              {
+                staticClass: "btn btn-danger",
+                class: { active: _vm.isPrivate === 1 }
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.isPrivate,
+                      expression: "isPrivate"
+                    }
+                  ],
+                  attrs: {
+                    type: "radio",
+                    id: "typeprivate",
+                    autocomplete: "off",
+                    value: "1"
+                  },
+                  domProps: { checked: _vm._q(_vm.isPrivate, "1") },
+                  on: {
+                    change: function($event) {
+                      _vm.isPrivate = "1"
+                    }
+                  }
+                }),
+                _vm._v(" Private\n                        ")
+              ]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group row" }, [
+        _vm.questions.length > 0
+          ? _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+              _vm._v("Questions: ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-4" }, [
+          _c(
+            "ul",
+            { staticClass: "list-group" },
+            _vm._l(_vm.questions, function(question) {
+              return _vm.questions
+                ? _c(
+                    "li",
+                    { key: question.id, staticClass: "list-group-item" },
+                    [
+                      _vm._v(
+                        "\n                            " + _vm._s(question.text)
+                      )
+                    ]
+                  )
+                : _vm._e()
+            })
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group row" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-sm btn-primary mt-2",
+            attrs: { id: "show-modal" },
+            on: {
+              click: function($event) {
+                _vm.showModal = true
+              }
+            }
+          },
+          [_vm._v("Add\n                    question")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group row" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { type: "button" },
+            on: {
+              click: function($event) {
+                _vm.createQuiz()
+              }
+            }
+          },
+          [_vm._v("Create quiz")]
+        ),
+        _vm._v("\n\n                " + _vm._s(this.quiz) + "\n            ")
       ])
     ])
   ])
@@ -48660,25 +48855,17 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("label", { staticClass: "col-form-label mr-2" }, [_vm._v("Title: ")]),
+    return _c("div", { staticClass: "form-group row" }, [
+      _c("label", { staticClass: "col-sm-2 col-form-label" }, [
+        _vm._v("Time (minutes): ")
+      ]),
       _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control col-md-4",
-        attrs: { type: "text" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row mt-2" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-success", attrs: { type: "button" } },
-        [_vm._v("Create quiz")]
-      )
+      _c("div", { staticClass: "col-sm-4" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "text", placeholder: "60", required: "" }
+        })
+      ])
     ])
   }
 ]

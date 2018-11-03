@@ -38,10 +38,10 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mx-auto">
                         @auth
-                        <li class="nav-item mr-2">
+                        <li class="nav-item mr-2 {{ Request::is('newquiz*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/newquiz') }}"><i class="fas fa-plus-circle"></i>    New quiz</a>
                         </li>
-                        <li class="nav-item active mr-2">
+                        <li class="nav-item mr-2 {{ Request::is('dashboard*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/dashboard') }}"><i class="fas fa-bars"></i>    My quizzes</a>
                         </li>
                         <li class="nav-item mr-2">
