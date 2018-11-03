@@ -47706,6 +47706,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteQuiz: function deleteQuiz(quiz_id) {
             var _this3 = this;
 
+            console.log(quiz_id);
             fetch('/api/quiz/' + quiz_id, {
                 method: 'delete'
             }).then(function (res) {

@@ -109,6 +109,7 @@
                 }
             },
             deleteQuiz(quiz_id) {
+                console.log(quiz_id);
                 fetch('/api/quiz/' + quiz_id, {
                         method: 'delete'
                     })

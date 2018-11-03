@@ -89,10 +89,14 @@ class QuizController extends Controller
     public function destroy($id)
     {
         $quiz = Quiz::findOrFail($id);
+        $questions = Question::where('quiz_id', $id);
+        foreach($questions as $i => $question) {
+            $answer = Question::where('question_id', $question[$i]['id'])->delete();
+        }
 
-        if($quiz->delete())
-        {
-        	return new QuizResource($quiz);
-    	}
+        $questions->delete();
+        $quiz->delete();
+
+        return "OK";
     }
 }

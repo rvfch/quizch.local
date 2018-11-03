@@ -16,7 +16,7 @@ class CreateQuestionsAnswersTable extends Migration
         Schema::create('questions_answers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('question_id')->unsigned()->nullable();
-            $table->foreign('question_id')->references('id')->on('questions');
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
             $table->string('answer')->nullable();
             $table->tinyInteger('correct')->nullable()->default(0);
 
