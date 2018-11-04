@@ -44,13 +44,13 @@
                         <li class="nav-item mr-2 {{ Request::is('dashboard*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/dashboard') }}"><i class="fas fa-bars"></i>    My quizzes</a>
                         </li>
-                        <li class="nav-item mr-2">
+                        <li class="nav-item mr-2 {{ Request::is('results*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/results') }}"><i class="fas fa-table"></i> My results</a>
                         </li>
-                        <li class="nav-item mr-2">
+                        <li class="nav-item mr-2 {{ Request::is('stats*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/stats') }}"><i class="far fa-chart-bar"></i> Stats</a>
                         </li>
-                        <li class="nav-item mr-2">
+                        <li class="nav-item mr-2 {{ Request::is('settings*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/settings') }}"><i class="fas fa-sliders-h"></i> Settings</a>
                         </li>
                         @if(Auth::user()->isAdmin)

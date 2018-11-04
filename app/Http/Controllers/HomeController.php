@@ -37,9 +37,15 @@ class HomeController extends Controller
 
     public function showQuiz($id)
     {
+        $ifPassed = Result::where('quiz_id', $id)->exists() ? true : false;
         if((Quiz::where('id', $id)->select('isPrivate')->first()->isPrivate != 1)
         || (Quiz::where('id', $id)->select('user_id')->first()->user_id == Auth::id()))
-            return view('quiz')->with('id', $id)->with('error', '0');
+        {
+            if(!$ifPassed)
+                return view('quiz')->with('id', $id)->with('error', '0');
+            else
+            return view('quiz')->with('id', $id)->with('error', 'passed');
+        }
         else
             return view('quiz')->with('error', 'private');
     }

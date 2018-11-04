@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/dashboard', 'HomeController@index')->name('home');
 Route::get('/quiz/{id}', 'HomeController@showQuiz');
+Route::get('/quizdisplay/{id}', 'HomeController@displayQuiz');
 Route::get('/newquiz', 'HomeController@newQuiz');
 Route::get('/results', 'HomeController@results');
 

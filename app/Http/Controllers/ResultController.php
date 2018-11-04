@@ -35,7 +35,7 @@ class ResultController extends Controller
      */
     public function show($id)
     {
-        $results = Result::where('user_id', $id)->get();
+        $results = Result::where('user_id', $id)->paginate(10);
         return ResultResource::collection($results);
     }
 
