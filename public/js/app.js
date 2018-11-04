@@ -47374,6 +47374,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['quiz_id'],
@@ -47391,7 +47394,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 correct: ''
             },
             currentQuestion: 0,
-            questions_count: 0
+            questions_count: 0,
+            userPoints: 0,
+            selectedAnswerId: '',
+            quizEnded: false
         };
     },
 
@@ -47412,7 +47418,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadAnswers: function loadAnswers() {
             this.answers = this.questions[this.currentQuestion].answers;
         },
-        endQuiz: function endQuiz() {}
+        endQuiz: function endQuiz() {
+            this.quizEnded = true;
+        },
+        checkQuestion: function checkQuestion(answer_id) {
+            if (answer_id != '') {
+                if (this.answers[answer_id].correct === 1) this.userPoints++;
+                this.selectedAnswerId = '';
+            }
+        }
     },
     created: function created() {
         this.fetchQuiz();
@@ -47435,9 +47449,9 @@ var render = function() {
             _vm.questions[_vm.currentQuestion]
               ? _c("h3", { staticClass: "panel-title" }, [
                   _vm._v(
-                    "\n            " +
+                    "\n                " +
                       _vm._s(_vm.questions[_vm.currentQuestion].question_text) +
-                      "\n        "
+                      "\n            "
                   )
                 ])
               : _vm._e()
@@ -47447,16 +47461,16 @@ var render = function() {
             ? _c(
                 "div",
                 { staticClass: "panel-body" },
-                _vm._l(_vm.answers, function(answer) {
-                  return _c("div", { key: answer.id, staticClass: "radio" }, [
+                _vm._l(_vm.answers, function(answer, index) {
+                  return _c("div", { key: index, staticClass: "radio" }, [
                     _c("label", [
                       _c("input", {
                         directives: [
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: answer.text,
-                            expression: "answer.text"
+                            value: answer.id,
+                            expression: "answer.id"
                           }
                         ],
                         attrs: {
@@ -47465,19 +47479,22 @@ var render = function() {
                           id: "option" + (answer.id + 1)
                         },
                         domProps: {
-                          value: answer.text,
-                          checked: _vm._q(answer.text, answer.text)
+                          value: index,
+                          checked: _vm._q(answer.id, index)
                         },
                         on: {
+                          click: function($event) {
+                            _vm.selectedAnswerId = index
+                          },
                           change: function($event) {
-                            _vm.$set(answer, "text", answer.text)
+                            _vm.$set(answer, "id", index)
                           }
                         }
                       }),
                       _vm._v(
-                        " \n                " +
+                        "\n                    " +
                           _vm._s(answer.text) +
-                          "\n            "
+                          "\n                "
                       )
                     ])
                   ])
@@ -47486,7 +47503,7 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _c("div", { staticClass: "panel-footer" }, [
-            _vm.currentQuestion == _vm.questions_count - 1
+            _vm.currentQuestion === _vm.questions_count - 1
               ? _c("div", [
                   _c(
                     "a",
@@ -47495,12 +47512,13 @@ var render = function() {
                       attrs: { href: "#", role: "button" },
                       on: {
                         click: function($event) {
+                          _vm.checkQuestion(_vm.selectedAnswerId)
                           _vm.currentQuestion++
                           _vm.endQuiz()
                         }
                       }
                     },
-                    [_vm._v("End Quiz")]
+                    [_vm._v("End\n                    Quiz")]
                   )
                 ])
               : _c("div", [
@@ -47511,17 +47529,26 @@ var render = function() {
                       attrs: { href: "#", role: "button" },
                       on: {
                         click: function($event) {
+                          _vm.checkQuestion(_vm.selectedAnswerId)
                           _vm.currentQuestion++
                           _vm.loadAnswers()
                         }
                       }
                     },
-                    [_vm._v("Next question")]
+                    [_vm._v("Next\n                    question")]
                   )
                 ])
           ])
         ])
-      : _c("div", [_vm._v("\n        Quiz ended\n    ")])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.quizEnded
+      ? _c("div", [
+          _vm._v(
+            "\n        You have " + _vm._s(_vm.userPoints) + " points.\n    "
+          )
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []

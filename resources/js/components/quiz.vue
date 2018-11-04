@@ -1,37 +1,40 @@
 <template>
     <div class="panel panel-primary">
         <div v-if="currentQuestion != questions_count">
-        <div class="panel-heading">
-            <h3 class="panel-title" v-if="questions[currentQuestion]">
-                {{ questions[currentQuestion].question_text }}
-            </h3>
-        </div>
-        <div class="panel-body" v-if="answers">
-            <div class="radio" v-for="answer in answers" :key="answer.id">
-                <label>
-                    <input type="radio" name="optionsRadios" v-model="answer.text" :id="'option'+(answer.id+1)" :value="answer.text"> 
-                    {{ answer.text }}
-                </label>
+            <div class="panel-heading">
+                <h3 class="panel-title" v-if="questions[currentQuestion]">
+                    {{ questions[currentQuestion].question_text }}
+                </h3>
+            </div>
+            <div class="panel-body" v-if="answers">
+                <div class="radio" v-for="(answer,index) in answers" :key="index">
+                    <label>
+                        <input type="radio" name="optionsRadios" v-model="answer.id" :id="'option'+(answer.id+1)"
+                            :value="index" @click="selectedAnswerId = index">
+                        {{ answer.text }}
+                    </label>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div v-if="currentQuestion === questions_count - 1">
+                    <a href="#" class="btn btn-primary" role="button" @click="checkQuestion(selectedAnswerId); currentQuestion++; endQuiz(); ">End
+                        Quiz</a>
+                </div>
+                <div v-else>
+                    <a href="#" class="btn btn-primary" role="button" @click="checkQuestion(selectedAnswerId); currentQuestion++; loadAnswers(); ">Next
+                        question</a>
+                </div>
             </div>
         </div>
-        <div class="panel-footer">
-            <div v-if="currentQuestion == questions_count - 1">
-                <a href="#" class="btn btn-primary" role="button" @click="currentQuestion++; endQuiz();">End Quiz</a>
-            </div>
-            <div v-else>
-                <a href="#" class="btn btn-primary" role="button" @click="currentQuestion++; loadAnswers();">Next question</a>
-            </div>
-            </div>
+        <div v-if="quizEnded">
+            You have {{ userPoints }} points.
         </div>
-        <div v-else>
-            Quiz ended
-        </div>
-        </div>
+    </div>
 </template>
 
 <script>
     export default {
-        props: [ 'quiz_id' ],
+        props: ['quiz_id'],
         data() {
             return {
                 questions: [],
@@ -46,12 +49,15 @@
                     correct: ''
                 },
                 currentQuestion: 0,
-                questions_count: 0
+                questions_count: 0,
+                userPoints: 0,
+                selectedAnswerId: '',
+                quizEnded: false
             };
         },
         methods: {
             fetchQuiz() {
-                fetch('/api/quiz/'+this.quiz_id)
+                fetch('/api/quiz/' + this.quiz_id)
                     .then(res => res.json())
                     .then(res => {
                         this.questions = res.data.questions;
@@ -63,9 +69,16 @@
             loadAnswers() {
                 this.answers = this.questions[this.currentQuestion].answers;
             },
-            endQuiz()
-            {
-
+            endQuiz() {
+                this.quizEnded = true;
+                
+            },
+            checkQuestion(answer_id) {
+                if (answer_id != '') {
+                    if (this.answers[answer_id].correct === 1)
+                        this.userPoints++;
+                        this.selectedAnswerId = '';
+                }
             }
         },
         created() {
