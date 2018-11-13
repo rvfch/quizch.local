@@ -1,7 +1,10 @@
 language: php
 
 php:
-  - "7.2"
+  - 7.2.1
+
+addons:
+  mariadb: '10.1'
 
 before_script:
   - cp .env.travis .env
@@ -9,7 +12,7 @@ before_script:
   - composer self-update
   - composer install --no-interaction
   - php artisan key:generate
-  - php artisan migrate
+  - php artisan migrate --step
 
 script:
   - vendor/bin/phpunit
