@@ -4,9 +4,8 @@ php:
   - 7.1
   - 7.2
 
-
 before_script:
-  - travis_retry composer self-update
-  - travis_retry composer install --prefer-source --no-interaction
+  - composer self-update
+  - composer install --prefer-source --no-interaction
 
 script: vendor/bin/phpunit
