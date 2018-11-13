@@ -37,17 +37,25 @@ class HomeController extends Controller
 
     public function showQuiz($id)
     {
-        $ifPassed = Result::where('quiz_id', $id)->exists() ? true : false;
-        if((Quiz::where('id', $id)->select('isPrivate')->first()->isPrivate != 1)
-        || (Quiz::where('id', $id)->select('user_id')->first()->user_id == Auth::id()))
-        {
-            if(!$ifPassed)
+        if(Quiz::where('id', $id)->exists()) {
+            $ifPassed = Result::where('quiz_id', $id)->exists() ? true : false;
+
+            if((Quiz::where('id', $id)->select('isPrivate')->first()['isPrivate'] != 1)
+            || (Quiz::where('id', $id)->select('user_id')->first()->user_id == Auth::id()))
+            {
+                if(!$ifPassed)
+                    return view('quiz')->with('id', $id)->with('error', '0');
+                else
+                    return view('quiz')->with('id', $id)->with('error', 'passed');
+            }
+            else if(!Auth::user()->isAdmin) {
+                return view('quiz')->with('error', 'private'); 
+            } else { 
                 return view('quiz')->with('id', $id)->with('error', '0');
-            else
-            return view('quiz')->with('id', $id)->with('error', 'passed');
+            }
+        } else {
+            return view('quiz')->with('error', 'dontexist');
         }
-        else
-            return view('quiz')->with('error', 'private');
     }
 
     public function results()

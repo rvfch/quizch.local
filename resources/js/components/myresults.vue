@@ -13,9 +13,9 @@
                 <tr v-for="(result,index) in results" :key="index">
                     <td class="align-baseline">{{ result.quiz_title }}</td>
                     <td class="align-baseline">
-                        <div class="progress">
+                        <div class="progress position-relative">
                             <div class="progress-bar" role="progressbar" :style="{width: calculatePercentage(result.right_answers, result.total_questions) + '%'}" :aria-valuenow="calculatePercentage(result.right_answers, result.total_questions)" aria-valuemin="0"
-                                aria-valuemax="100">{{ result.right_answers }} / {{ result.total_questions }}</div>
+                                aria-valuemax="100"><span class="justify-content-center d-flex position-absolute w-100" style="color:black;">{{ result.right_answers }} / {{ result.total_questions }}</span></div>
                         </div>
                     </td>
                     <td v-if="result.isPassed" class="align-baseline"><span class="badge badge-success" style="width:100%;">Success</span></td>

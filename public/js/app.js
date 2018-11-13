@@ -49152,7 +49152,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("td", { staticClass: "align-baseline" }, [
-              _c("div", { staticClass: "progress" }, [
+              _c("div", { staticClass: "progress position-relative" }, [
                 _c(
                   "div",
                   {
@@ -49175,10 +49175,20 @@ var render = function() {
                     }
                   },
                   [
-                    _vm._v(
-                      _vm._s(result.right_answers) +
-                        " / " +
-                        _vm._s(result.total_questions)
+                    _c(
+                      "span",
+                      {
+                        staticClass:
+                          "justify-content-center d-flex position-absolute w-100",
+                        staticStyle: { color: "black" }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(result.right_answers) +
+                            " / " +
+                            _vm._s(result.total_questions)
+                        )
+                      ]
                     )
                   ]
                 )
