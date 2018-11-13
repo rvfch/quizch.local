@@ -1,0 +1,18 @@
+language: php
+
+
+php:
+  - 7.1
+  - 7.2
+
+install:
+  - cp .env.dusk.testing .env
+  - travis_retry composer install --no-interaction --prefer-dist --no-suggest
+  - yarn --ignore-engines
+  - npm run production
+
+before_script:
+  - php artisan serve &
+
+script:
+  - vendor/bin/phpunit
