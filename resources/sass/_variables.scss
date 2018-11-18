@@ -3,18 +3,38 @@
 $body-bg: #f8fafc;
 
 // Typography
-$font-family-sans-serif: "Open Sans", "Helvetica", "Arial", sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+$font-family-sans-serif: "Open Sans", sans-serif;
+$font-size-base: 1rem;
+$logo-font-size: 1.5rem;
+$font-weight-base: 300;
+$line-height-base: 0.9rem;
+
+$font-color-base: #7e8d85;
 
 // Colors
-$blue: #3490dc;
+$blue: #0083BB;
 $indigo: #6574cd;
 $purple: #9561e2;
 $pink: #f66D9b;
-$red: #e3342f;
+$red: #f44336;
 $orange: #f6993f;
-$yellow: #ffed4a;
-$green: #38c172;
+$yellow: #ffb300;
+$green: #29bf89;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+$black: #000;
+$white: #fff;
+$grey: #6c757d;
+$light-grey: #e0e0e0;
+$super-light-grey: #f5f5f5;
+
+// Buttons
+$btn-default-height: 2em;
+$btn-sm-height: 1.8em;
+$btn-lg-height: 2.2em;
+
+$btn-trans-delay: 0.15s;
+
+// Inputs
+$input-height: 2.3em;
+$input-border-color: #bdbdbe;
