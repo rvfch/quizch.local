@@ -2,7 +2,7 @@
     <div>
         <main class="main animated zoomIn fast">
             <header>
-                <div class="logo">Hello, %user%</div>
+                <div class="logo">Hello, {{ username }}</div>
                 <nav id="navigation">
                     <router-link tag="button" :to="{ name: 'newquiz' }" class="btn btn-lg btn-green" exact-active-class="active">
                       <i class="fas fa-plus-circle"></i> <strong>New quiz</strong>
@@ -29,7 +29,10 @@
                             </router-link>
                         </li>
                     </ul>
-                    <button href="/logout" class="btn btn-blue"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+                    <button href="/logout" class="btn btn-blue" @click="logOut()"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+                    <form ref="logout" action="/logout" method="POST" style="display: none;">
+                        <input type="hidden" name="_token" :value="csrf" />
+                    </form>
                 </nav>
             </header>
             <section>
@@ -45,5 +48,17 @@
 </template>
 
 <script>
-    export default {}
+    export default {
+      props: ['username', 'userid'],
+      data() {
+        return {
+          csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      },
+      methods: {
+        logOut: function() {
+          this.$refs.logout.submit()
+        }
+      }
+    }
 </script>

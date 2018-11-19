@@ -33,6 +33,7 @@ button {
 
 a {
     text-decoration: none;
+    color: $grey;
 }
 
 a:hover {
@@ -81,8 +82,24 @@ table {
     text-align: left;
     overflow-y: auto;
 }
+
+h1 {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 20px;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid rgba(0,0,0,.15);
+}
+
+h1:first-child {
+	padding-top: 0;
+}
+
+
 // Styles for classes
-/*---- Main classes ----*/
+
 .container {
     width: 100vh;
     display: flex;
@@ -103,6 +120,12 @@ table {
     height: 70vh;
     width: 900px;
     overflow: hidden;
+}
+
+.container main.auth {
+  height: 35vh;
+  width: 40vh;
+  padding:0;
 }
 
 .container main header {
@@ -131,12 +154,20 @@ table {
     padding-bottom: 0.7rem;
 }
 
+.container main section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .container main section .content {
     display: flex;
     flex-direction: column;
     height: 100%;
     padding: 0.9em;
+    width: 100%;
 }
+
 
 .container main section .top-bar {
     height: 1.2em;
@@ -152,7 +183,8 @@ table {
     padding-bottom: 1em;
     color: $blue;
 }
-/*----  Buttons ----*/
+// Buttons
+
 .btn {
     display: inline-block;
     transition: all ease-in-out $btn-trans-delay;
@@ -332,6 +364,7 @@ table {
     border-left: 0;
 }
 // Tables
+
 .table {
     align-self: stretch;
     font-size: 0.8rem;
@@ -421,8 +454,9 @@ table {
 }
 
 .card {
-    flex: 1 0 28%;
-    width: 28%;
+    margin: 0 1em 1em;
+    flex: 0 0 28%;
+    width: 100%;
     font-size: 0.8rem;
     display: flex;
     flex-direction: column;
@@ -430,12 +464,21 @@ table {
     border: 1px solid rgba(0,0,0,.1);
     box-shadow: 0 3px 10px rgba(0,0,0,.1);
     transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
-    margin: 0 1em 1em;
     overflow: hidden;
 }
 
 .card:hover {
     box-shadow: 2px 5px 10px rgba(0,0,0,.15);
+}
+
+.card.card-hover .card-row {
+    transition: all 0.15s ease-in-out;
+}
+
+.card.card-hover .card-row:hover {
+    transition: all 0.15s ease-in-out;
+    background-color: $super-light-grey;
+    font-size: 1.1em;
 }
 
 .card-title {
@@ -462,88 +505,164 @@ table {
 }
 
 .card-title.progress-bar {
-  background-color: $blue;
-  height: 30px;
-  line-height: 30px;
-  color: $white;
-  opacity: 0.6;
-  padding: 0 10px 0;
-  font-family: 'Inconsolata', monospace;
-  width: 17vh;
-  text-align:center;
+    background-color: $blue;
+    height: 30px;
+    line-height: 30px;
+    color: $white;
+    opacity: 0.6;
+    padding: 0 10px;
+    font-family: 'Inconsolata', monospace;
+    width: 17vh;
+    text-align: center;
 }
 
 .card .card-title.title {
-  padding: 0.8em;
-  font-weight: 600;
+    padding: 0.8em;
+    font-weight: 600;
 }
 
 .card .card-title.title a {
-  color: $grey;
+    color: $grey;
 }
 
 .card .card-title.title a:hover {
-  color: $black;
+    color: $black;
 }
 
 .card .card-body {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.8rem;
-  align-items: center;
-  justify-content: center;
-  background-color: $white;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    overflow: hidden;
 }
 
 .card .card-body .card-row {
-  display: flex;
-  width: 100%;
-  line-height: 25px;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  align-items: center;
-  border-bottom: 1px solid $light-grey;
-  height: 25px;
-  justify-content: space-between;
-  overflow: hidden;
+    display: flex;
+    width: 100%;
+    line-height: 25px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    align-items: center;
+    border-bottom: 1px solid $light-grey;
+    height: 25px;
+    justify-content: space-between;
+    overflow: hidden;
 }
 
 .card .card-body .card-row:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
-
 .card-mark {
-  height: 30px;
-  width: 10%;
-  line-height: 30px;
-  text-align: center;
-  color: $white;
-  font-weight: 700;
-  padding:0 5px 0;
+    height: 30px;
+    width: 10%;
+    line-height: 30px;
+    text-align: center;
+    color: $white;
+    font-weight: 700;
+    padding: 0 5px;
 }
 
 .card-mark.card-green {
-  background-color: $green;
+    background-color: $green;
 }
 
 .card-mark.card-yellow {
-  background-color: $yellow;
+    background-color: $yellow;
 }
 
 .card-mark.card-red {
-  background-color: $red;
+    background-color: $red;
 }
 
 .card-title.footer a:hover {
     color: $black;
 }
+// Forms
+
+.form-content {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.form-content .form-left {
+    display: flex;
+    flex-direction: column;
+    padding-right: 1em;
+    flex: 0 0 40%;
+    justify-content: flex-start;
+}
+
+.form-content .form-right {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 60%;
+    justify-content: flex-start;
+}
+
+.form-content .form-full {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-row {
+    padding-bottom: 0.8em;
+}
+
+.form-row .card {
+  margin: 0;
+}
+
+.form-row button,
+.form-row input,
+.form-row textarea {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.input-group-prepend {
+    display: flex;
+}
+
+.input-group-prepend button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    height: auto;
+    width: auto;
+}
+
+.input-group-prepend input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+}
+
+.input-group-prepend span {
+    border: 1px solid $input-border-color;
+    height: 2.3em;
+    line-height: 2.3em;
+    padding: 0 5px;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: $super-light-grey;
+}
 // Helpers
+
 .w100 {
     width: 100%!important;
 }
 
 .h100 {
     height: 100%!important;
+}
+
+.text-center {
+  text-align: center;
 }
