@@ -43,6 +43,7 @@ class QuizController extends Controller
 
         $quiz->id = $request->input('id');
         $quiz->title = $request->input('title');
+        $quiz->description = $request->input('description');
         $quiz->user_id = $request->input('user_id');
         $quiz->answers_count = $request->input('questions_count');
         $quiz->isPrivate = $request->input('private');
@@ -50,7 +51,7 @@ class QuizController extends Controller
         $quiz->save();
         $questionTemp = [];
         foreach($request->input('questions') as $i => $question) {
-            
+
             $questionTemp[$i] = new Question(['quiz_id' => $quiz->id, 'question_text' => $question['text']]);
         }
         $quiz->questions()->saveMany($questionTemp);

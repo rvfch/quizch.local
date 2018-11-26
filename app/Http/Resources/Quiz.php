@@ -23,6 +23,7 @@ class Quiz extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'description' => $this->description,
             'user_id' => $this->user_id,
             'questions_count' => $this->answers_count,
             'private' => (int)$this->isPrivate,

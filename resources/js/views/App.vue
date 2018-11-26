@@ -1,64 +1,63 @@
 <template lang="html">
-    <div>
-        <main class="main animated zoomIn fast">
-            <header>
-                <div class="logo">Hello, {{ username }}</div>
-                <nav id="navigation">
-                    <router-link tag="button" :to="{ name: 'newquiz' }" class="btn btn-lg btn-green" exact-active-class="active">
-                      <i class="fas fa-plus-circle"></i> <strong>New quiz</strong>
-                    </router-link>
-                    <ul class="side-nav">
-                        <li>
-                            <router-link tag="button" :to="{ name: 'myquizzes' }" class="btn btn-blue" exact-active-class="active">
-                                <i class="fas fa-bars"></i> My quizzes
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link tag="button" :to="{ name: 'myresults' }" class="btn btn-blue" exact-active-class="active">
-                                <i class="fas fa-table"></i> My results
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link tag="button" :to="{ name: 'stats' }" class="btn btn-blue" exact-active-class="active">
-                                <i class="far fa-chart-bar"></i> Statistics
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link tag="button" :to="{ name: 'settings' }" class="btn btn-blue" exact-active-class="active">
-                                <i class="fas fa-sliders-h"></i> Settings
-                            </router-link>
-                        </li>
-                    </ul>
-                    <button href="/logout" class="btn btn-blue" @click="logOut()"><i class="fas fa-sign-out-alt"></i> Log Out</button>
-                    <form ref="logout" action="/logout" method="POST" style="display: none;">
-                        <input type="hidden" name="_token" :value="csrf" />
-                    </form>
-                </nav>
-            </header>
-            <section>
-                <div class="top-bar">
-                    top-bar
-                </div>
-                <div class="content">
-                    <router-view></router-view>
-                </div>
-            </section>
-        </main>
-    </div>
+  <b-container fluid>
+      <b-navbar toggleable type="dark" variant="primary">
+        <b-navbar-toggle target="nav_text_collapse"></b-navbar-toggle>
+        <b-navbar-brand>Quizch</b-navbar-brand>
+        <b-collapse is-nav id="nav_text_collapse">
+          <b-navbar-nav class="d-lg-none d-md-none d-sm-flex">
+            <b-nav-item :to="{name: 'newquiz'}"><font-awesome-icon icon="plus-circle" /> New quiz</b-nav-item>
+            <b-nav-item :to="{name: 'myquizzes'}"><font-awesome-icon :icon="['fas', 'bars']" /> My quizzes</b-nav-item>
+            <b-nav-item :to="{name: 'myresults'}"><font-awesome-icon :icon="['fas', 'table']" /> My results</b-nav-item>
+            <b-nav-item :to="{name: 'stats'}"><font-awesome-icon icon="chart-bar" /> Stats</b-nav-item>
+            <b-nav-item :to="{name: 'settings'}"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</b-nav-item>
+          </b-navbar-nav>
+
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item-dropdown right>
+              <template slot="button-content">
+                <strong><font-awesome-icon icon="user" /> Rvfch</strong>
+              </template>
+              <b-dropdown-item href="#"><font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Log Out</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
+      <b-row no-gutters>
+        <b-col tag="nav" md="2" sm="3" class="px-4 d-none d-md-block sidebar">
+            <ul>
+              <li><router-link tag="a" :to="{ name: 'newquiz', params: {} }"><font-awesome-icon icon="plus-circle" /> New quiz</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'myquizzes', params: { userId: userid } }"><font-awesome-icon :icon="['fas', 'bars']" /> My quizzes</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'myresults', params: {} }"><font-awesome-icon :icon="['fas', 'table']" /> My results</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'stats', params: {} }"><font-awesome-icon icon="chart-bar" /> Statistics</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'settings', params: {} }"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</router-link></li>
+            </ul>
+        </b-col>
+        <b-col tag="main" role="main" md="9" lg="10" class="content ml-sm-auto px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h3>{{ $route.name }}</h3>
+          </div>
+          <router-view></router-view>
+        </b-col>
+      </b-row>
+    </b-container>
 </template>
 
 <script>
-    export default {
-      props: ['username', 'userid'],
-      data() {
+export default {
+    props: ['username', 'userid'],
+    data() {
         return {
-          csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
-      },
-      methods: {
+    },
+    created() {
+      this.$store.commit('SET_USER_ID', this.userid)
+      this.$store.commit('SET_USER_NAME', this.username)
+    },
+    methods: {
         logOut: function() {
-          this.$refs.logout.submit()
+            this.$refs.logout.submit()
         }
-      }
     }
+}
 </script>

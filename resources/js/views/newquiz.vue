@@ -11,7 +11,7 @@
                 <div class="form-row">
                     <div class="input-group-prepend">
                         <span><i class="fas fa-clock"></i></span>
-                        <input type="text" placeholder="59:59" required>
+                        <input type="text" placeholder="59:59">
                     </div>
                 </div>
                 <div class="form-row">

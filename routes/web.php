@@ -13,9 +13,9 @@
 
 Auth::routes();
 
-Route::get('quiz/{id}', 'HomeController@showQuiz');
 
-Route::any('{all}', 'SpaController@index')->where(['all' => '.*']);
+
+Route::any('/{all}', 'SpaController@index')->where(['all' => '.*']);
 
 //Route::get('/dashboard', 'HomeController@index')->name('home');
 //Route::get('/quiz/{id}', 'HomeController@showQuiz');
