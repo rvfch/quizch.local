@@ -25,7 +25,7 @@ class QuizController extends Controller
 
     public function getUser($user_id)
     {
-        $quizzes = Quiz::where('user_id', $user_id)->paginate(10);
+        $quizzes = Quiz::where('user_id', $user_id)->get();
 
         return QuizResource::collection($quizzes);
     }
@@ -51,8 +51,7 @@ class QuizController extends Controller
         $quiz->save();
         $questionTemp = [];
         foreach($request->input('questions') as $i => $question) {
-
-            $questionTemp[$i] = new Question(['quiz_id' => $quiz->id, 'question_text' => $question['text']]);
+            $questionTemp[$i] = new Question(['quiz_id' => $quiz->id, 'question_text' => $question['question_text']]);
         }
         $quiz->questions()->saveMany($questionTemp);
 

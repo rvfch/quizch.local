@@ -50,6 +50,7 @@ subset=cyrillic);.container-fluid {
   display: block;
   padding: 0.5em 0;
   text-decoration: none;
+  text-transform: uppercase;
   -webkit-transition: all ease-in-out 0.15s;
   transition: all ease-in-out 0.15s;
   color: black;

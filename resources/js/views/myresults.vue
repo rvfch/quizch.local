@@ -1,115 +1,34 @@
 <template lang="html">
     <div>
-        <div class="card-container">
-            <div class="card">
-                <div class="card-title">
-                    <div class="card-title title">
-                        <a href="#">Quiz 1</a>
-                    </div>
-                    <div class="card-title progress-bar">
-                        90 / 100
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-row">
-                        Questions count: <span>10</span>
-                    </div>
-                    <div class="card-row">
-                        Correct answers: <span>9</span>
-                    </div>
-                    <div class="card-row">
-                        Wrong answers: <span>1</span>
-                    </div>
-                </div>
-                <div class="card-title footer">
-                    <div class="card-mark card-green">A</div>
-                    <a href="#">Detail info...</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <div class="card-title title">
-                        <a href="#">Quiz 1</a>
-                    </div>
-                    <div class="card-title progress-bar">
-                        90 / 100
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-row">
-                        Questions count: <span>10</span>
-                    </div>
-                    <div class="card-row">
-                        Correct answers: <span>9</span>
-                    </div>
-                    <div class="card-row">
-                        Wrong answers: <span>1</span>
-                    </div>
-                </div>
-                <div class="card-title footer">
-                    <div class="card-mark card-green">A</div>
-                    <a href="#">Detail info...</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <div class="card-title title">
-                        <a href="#">Quiz 1</a>
-                    </div>
-                    <div class="card-title progress-bar">
-                        90 / 100
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-row">
-                        Questions count: <span>10</span>
-                    </div>
-                    <div class="card-row">
-                        Correct answers: <span>9</span>
-                    </div>
-                    <div class="card-row">
-                        Wrong answers: <span>1</span>
-                    </div>
-                </div>
-                <div class="card-title footer">
-                    <div class="card-mark card-green">A</div>
-                    <a href="#">Detail info...</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <div class="card-title title">
-                        <a href="#">Quiz 1</a>
-                    </div>
-                    <div class="card-title progress-bar">
-                        90 / 100
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-row">
-                        Questions count: <span>10</span>
-                    </div>
-                    <div class="card-row">
-                        Correct answers: <span>9</span>
-                    </div>
-                    <div class="card-row">
-                        Wrong answers: <span>1</span>
-                    </div>
-                </div>
-                <div class="card-title footer">
-                    <div class="card-mark card-green">A</div>
-                    <a href="#">Detail info...</a>
-                </div>
-            </div>
-        </div>
+        <b-card-group deck class="mb-3" v-for="row in Math.ceil(results.length / 4)" :key="row">
+          <b-card v-for="(result, index) in results.slice((row-1) * 4, row * 4)" :key="index" bg-variant="success" text-variant="white" :header="result.id" class="text-center" style="max-width: 20rem;">
+            <b-progress :value="result.right_answers" :max="result.right_answers" show-progress></b-progress>
+          </b-card>
+        </b-card-group>
     </div>
 </template>
 
 <script>
-    export default {}
+    export default {
+      data() {
+        return {
+          rows: null
+        }
+      },
+      computed: {
+        results() {
+          return this.$store.state.results
+        }
+      },
+      mounted() {
+        this.getResults()
+      },
+      methods: {
+        getResults() {
+          this.$store.dispatch('getresults')
+        }
+      }
+    }
 </script>
 
 <style lang="css">

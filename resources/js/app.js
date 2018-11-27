@@ -17,7 +17,7 @@ import Stats from './views/stats'
 import Newquiz from './views/newquiz'
 import Quiz from './views/quiz'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlusCircle, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
+import { faPlusCircle, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import store from './store/index'
@@ -34,6 +34,9 @@ library.add(faEdit)
 library.add(faTrashAlt)
 library.add(faLock)
 library.add(faLockOpen)
+library.add(faClock)
+library.add(faCheck)
+library.add(faPlus)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(Vuex)
 Vue.use(VueRouter)

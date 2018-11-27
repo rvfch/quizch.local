@@ -37,7 +37,7 @@ class Quiz extends JsonResource
         return [
             'version' => '1.0',
             'author' => 'Roman "rvfch" Filatov',
-            'author_url' => url('http://rvfch.me')
+            'author_url' => url('http://rvfch.github.io')
         ];
     }
 }
