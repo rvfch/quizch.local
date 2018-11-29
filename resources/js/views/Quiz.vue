@@ -1,36 +1,97 @@
 <template lang="html">
-    <div class="quiz-container">
-        <div class="quiz-header">
-            <div class="quiz-title">
-                %quiz_title%
-            </div>
-            <div class="quiz-btns">
-                <button type="button" class="btn btn-red"><i class="fas fa-times"></i> Exit</button>
-                <button type="button" class="btn btn-green"><i class="fas fa-arrow-right"></i> Finish</button>
-            </div>
-            <div class="quiz-timer"><i class="fas fa-clock"></i> 59:59</div>
+  <b-row class="d-flex justify-content-center align-items-center quiz-container">
+    <b-col lg="10">
+      <b-card class="quiz-window" :header="quiz.title">
+      <div id="quiz" v-if="!quizEnded">
+        <p style="font-size: 18px;">
+          {{ quiz.questions[questionNumber].question_text }}
+        </p>
+        <div class="quiz-answers">
+          <b-btn v-for="answer in quiz.questions[questionNumber].answers" :key="answer.id" @click="nextQuestion(answer.id)" variant="outline-primary" class="w-100 mb-2 text-left" size="sm">
+            {{ answer.text }}
+          </b-btn>
         </div>
-        <div class="quiz-body">
-            <div class="quiz-question">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa beatae voluptatem atque nisi cupiditate nemo autem, perferendis soluta unde nesciunt nam aspernatur quo accusantium esse! Officia saepe, exercitationem rerum
-                    iusto.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa beatae voluptatem atque nisi cupiditate nemo autem, perferendis soluta unde nesciunt nam aspernatur quo accusantium esse! Officia saepe, exercitationem rerum
-                    iusto.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa beatae voluptatem atque nisi cupiditate nemo autem, perferendis soluta unde nesciunt nam aspernatur quo accusantium esse! Officia saepe, exercitationem rerum
-                    iusto.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa beatae voluptatem atque nisi cupiditate nemo autem, perferendis soluta unde nesciunt nam aspernatur quo accusantium esse! Officia saepe, exercitationem rerum
-                    iusto.</p>
-            </div>
-            <div class="quiz-options">
-                <button type="button" class="btn btn-blue">Option 1</button>
-                <button type="button" class="btn btn-blue">Option 2</button>
-                <button type="button" class="btn btn-blue">Option 3</button>
-                <button type="button" class="btn btn-blue">Option 4</button>
-            </div>
         </div>
-    </div>
+        <div v-else>
+          <h2></h2>You have {{ points }} / {{ quiz.questions.length }} points.
+        </div>
+      </b-card>
+    </b-col>
+  </b-row>
 </template>
 
 <script>
-    export default {}
+    export default {
+      data() {
+        return {
+          questionNumber: 0,
+          points: 0,
+          results: [],
+          result: {},
+          quizEnded: false,
+          isPassed: false
+        }
+      },
+      computed: {
+        quiz() {
+          return this.$store.state.quiz
+        }
+      },
+      mounted() {
+        this.$store.dispatch('getquiz', this.$route.params.id)
+      },
+      methods: {
+        nextQuestion(answerId) {
+          if(this.questionNumber !== this.quiz.questions_count - 1) {
+            this.questionNumber++
+            this.results.push(answerId)
+          }
+          else {
+            this.results.push(answerId)
+            this.endQuiz()
+          }
+        },
+        endQuiz() {
+          this.quizEnded = true
+          this.calculateResult(this.results)
+
+          this.result = {
+            quiz_id: this.quiz.id,
+            right_answers: this.points,
+            isPassed: this.isPassed
+          }
+          this.$store.dispatch('addresult', this.result)
+        },
+        calculateResult(results) {
+          results.forEach((element, index) => {
+            if (this.quiz.questions[index].answers.find(x => x.id === element).correct === 1)
+              this.points++
+          })
+
+          if(this.points > Math.floor(this.quiz.questions.length / 2))
+            this.isPassed = true
+          else
+            this.isPassed = false
+        }
+      }
+    }
 </script>
 
 <style lang="css">
+.quiz-container {
+  height: 100vh;
+}
+
+.quiz-answers {
+  margin-top: 6rem;
+}
+
+.quiz-window {
+  box-shadow: 0 0 100px rgba(0,0,0,.15)
+}
+
+body {
+  background: #36D1DC;  /* fallback for old browsers */
+  background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 </style>

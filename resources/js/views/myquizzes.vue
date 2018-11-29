@@ -19,8 +19,6 @@
             <strong><a href="#">{{ data.value }}</a></strong>
           </template>
         </b-table>
-
-
     </div>
 </template>
 

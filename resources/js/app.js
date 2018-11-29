@@ -16,6 +16,7 @@ import Settings from './views/settings'
 import Stats from './views/stats'
 import Newquiz from './views/newquiz'
 import Quiz from './views/quiz'
+import NewFoundRoute from './views/NotFoundRoute'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlusCircle, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -78,6 +79,11 @@ const router = new VueRouter({
       name: 'quiz',
       component: Quiz
     },
+    {
+      path: '*',
+      name: 'myquizzes',
+      component: Myquizzes
+    }
   ],
 })
 

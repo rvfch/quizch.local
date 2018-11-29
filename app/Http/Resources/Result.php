@@ -19,8 +19,6 @@ class Result extends JsonResource
             'id' => (int)$this->id,
             'user_id' => (int)$this->user_id,
             'quiz_id' => (int)$this->quiz_id,
-            'quiz_title' => (string)QuizModel::where('id', $this->quiz_id)->select('title')->first()['title'],
-            'total_questions' => (int)QuizModel::where('id', $this->quiz_id)->select('answers_count')->first()['answers_count'],
             'right_answers' => (int)$this->right_answers,
             'isPassed' => (int)$this->isPassed,
             'created_at' => (string)$this->created_at

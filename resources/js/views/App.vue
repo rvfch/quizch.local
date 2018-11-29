@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-container fluid>
+  <b-container fluid v-if="$route.name !== 'quiz'">
       <b-navbar toggleable type="dark" variant="primary">
         <b-navbar-toggle target="nav_text_collapse"></b-navbar-toggle>
         <b-navbar-brand>Quizch</b-navbar-brand>
@@ -17,7 +17,7 @@
               <template slot="button-content">
                 <strong><font-awesome-icon icon="user" /> Rvfch</strong>
               </template>
-              <b-dropdown-item href="#"><font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Log Out</b-dropdown-item>
+              <b-dropdown-item @click.prevent="logOut()"><font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Log Out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -40,6 +40,9 @@
         </b-col>
       </b-row>
     </b-container>
+    <b-container fluid v-else>
+      <router-view></router-view>
+    </b-container>
 </template>
 
 <script>
@@ -56,7 +59,11 @@ export default {
     },
     methods: {
         logOut: function() {
-            this.$refs.logout.submit()
+            axios.post('/logout').then(resp => {
+              location.reload()
+            }).catch(err => {
+              location.reload()
+            })
         }
     }
 }

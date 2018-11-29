@@ -9,11 +9,15 @@ export default new Vuex.Store({
     userId: null,
     userName: null,
     quizzes: [],
-    results: []
+    results: [],
+    quiz: []
   },
   getters: {
     userId: state => {
       return state.userId
+    },
+    quiz: state => {
+      return state.quiz
     }
   },
   mutations: {
@@ -28,6 +32,9 @@ export default new Vuex.Store({
     },
     GET_RESULTS: (state, results) => {
       state.results = results
+    },
+    GET_QUIZ: (state, quiz) => {
+      state.quiz = quiz
     }
   },
   actions: {
@@ -67,12 +74,29 @@ export default new Vuex.Store({
       }).then(() => this.dispatch('getquizzes'))
       .catch()
     },
+    getquiz({ commit, state }, quizId) {
+      return axios.get('/api/quiz/' + quizId)
+                  .then(res => {
+                    commit('GET_QUIZ', res.data.data)
+                  })
+                  .catch()
+    },
     //results
     getresults({ commit, state }) {
       return axios.get('/api/results/' + state.userId)
             .then(res => {
               commit('GET_RESULTS', res.data.data)
             }).catch()
+    },
+    addresult({ state }, result) {
+      axios.post('/api/result', {
+        id: '',
+        user_id: state.userId,
+        quiz_id: result.quiz_id,
+        right_answers: result.right_answers,
+        isPassed: result.isPassed
+      }).then(() => this.dispatch('getresults'))
+        .catch()
     }
   }
 })

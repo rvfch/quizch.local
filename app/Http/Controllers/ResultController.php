@@ -35,7 +35,7 @@ class ResultController extends Controller
      */
     public function show($id)
     {
-        $results = Result::where('user_id', $id)->get();
+        $results = Result::where('user_id', $id)->orderBy('id', 'desc')->get();
         return ResultResource::collection($results);
     }
 
