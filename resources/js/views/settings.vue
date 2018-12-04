@@ -1,36 +1,31 @@
 <template lang="html">
-    <div>
-        <div class="form-content">
-            <div class="form-full">
-                <div class="form-row">
-                    <h1>Main settings</h1>
-                </div>
-                <div class="form-row">
-                    <label for="email">E-mail:</label>
-                    <input type="text" name="email" value="rvfchdev@gmail.com">
-                </div>
-                <div class="form-row">
-                    <label for="username">Name:</label>
-                    <input type="text" name="username" value="Roman Filatov">
-                </div>
-                <div class="form-row">
-                    <button type="button" class="btn btn-blue w100">Change settings</button>
-                </div>
-                <div class="form-row">
-                    <h1>Password</h1>
-                </div>
-                <div class="form-row">
-                    <input type="password" placeholder="Old password..." />
-                </div>
-                <div class="form-row">
-                    <input type="password" placeholder="New password...">
-                </div>
-                <div class="form-row">
-                    <button type="button" class="btn btn-green w100">Change password</button>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div>
+    <b-card class="mb-3">
+      <span style="font-weight: 500; font-size:18px;">ID: 12313</span>
+    </b-card>
+    <b-form-row>
+      <b-col>
+        <h4>Change name</h4>
+        <b-form-group id="firstNameInputGroup" label="First name: " label-for="firstNameInput">
+          <b-form-input id="firstNameInput" type="text" placeholder="..."></b-form-input>
+        </b-form-group>
+        <b-form-group id="lastNameInputGroup" label="Last name: " label-for="lastNameInput">
+          <b-form-input id="lastNameInput" type="text" placeholder="..."></b-form-input>
+        </b-form-group>
+        <b-btn variant="primary" class="w-100">Change name</b-btn>
+      </b-col>
+      <b-col>
+        <h4>Change password</h4>
+        <b-form-group id="oldPasswordInputGroup" label="Old password: " label-for="oldPasswordInput">
+          <b-form-input id="oldPasswordInput" type="password" placeholder="Old password..."></b-form-input>
+        </b-form-group>
+        <b-form-group id="newPasswordInputGroup" label="New password: " label-for="newPasswordInput">
+          <b-form-input id="newPasswordInput" type="password" placeholder="New password..."></b-form-input>
+        </b-form-group>
+        <b-btn variant="primary" class="w-100">Change password</b-btn>
+      </b-col>
+    </b-form-row>
+  </div>
 </template>
 
 <script>

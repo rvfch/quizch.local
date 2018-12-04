@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Quiz;
 use App\Question;
+use App\Result;
 use App\QuestionAnswer;
+use Auth;
 use App\Http\Resources\Quiz as QuizResource;
+
+use Illuminate\Support\Facades\Hash;
 
 class QuizController extends Controller
 {
@@ -25,7 +29,7 @@ class QuizController extends Controller
 
     public function getUser($user_id)
     {
-        $quizzes = Quiz::where('user_id', $user_id)->get();
+        $quizzes = Quiz::where('user_id', $user_id)->orderBy('id', 'desc')->get();
 
         return QuizResource::collection($quizzes);
     }
@@ -39,7 +43,7 @@ class QuizController extends Controller
      */
     public function store(Request $request)
     {
-        $quiz = $request->isMethod('put') ? Quiz::findOrFail($request->id) : new Quiz;
+        $quiz = $request->isMethod('put') ? Quiz::findOrFail($request->input('id')) : new Quiz;
 
         $quiz->id = $request->input('id');
         $quiz->title = $request->input('title');
@@ -47,20 +51,26 @@ class QuizController extends Controller
         $quiz->user_id = $request->input('user_id');
         $quiz->answers_count = $request->input('questions_count');
         $quiz->isPrivate = $request->input('private');
+        $quiz->password = $request->input('password') != '' ? Hash::make($request->input('password')) : '';
+        $quiz->duration = $request->input('duration');
+        $quiz->hash = md5(Hash::make($quiz->id));
 
         $quiz->save();
-        $questionTemp = [];
-        foreach($request->input('questions') as $i => $question) {
-            $questionTemp[$i] = new Question(['quiz_id' => $quiz->id, 'question_text' => $question['question_text']]);
-        }
-        $quiz->questions()->saveMany($questionTemp);
 
-        foreach($request->input('questions') as $i => $question) {
-            $answerTemp = [];
-            foreach($question['answers'] as $j => $answer) {
-                $answerTemp[$j] = new QuestionAnswer(['question_id' => $questionTemp[$i]->id, 'answer' => $answer['text'], 'correct' => $answer['correct']]);
-            }
-            $questionTemp[$i]->answers()->saveMany($answerTemp);
+        if(!$request->isMethod('put')) {
+          $questionTemp = [];
+          foreach($request->input('questions') as $i => $question) {
+              $questionTemp[$i] = new Question(['quiz_id' => $quiz->id, 'question_text' => $question['question_text']]);
+          }
+          $quiz->questions()->saveMany($questionTemp);
+
+          foreach($request->input('questions') as $i => $question) {
+              $answerTemp = [];
+              foreach($question['answers'] as $j => $answer) {
+                  $answerTemp[$j] = new QuestionAnswer(['question_id' => $questionTemp[$i]->id, 'answer' => $answer['text'], 'correct' => $answer['correct']]);
+              }
+              $questionTemp[$i]->answers()->saveMany($answerTemp);
+          }
         }
 
         return new QuizResource($quiz);
@@ -75,7 +85,7 @@ class QuizController extends Controller
      */
     public function show($id)
     {
-        $quiz = Quiz::findOrFail($id);
+        $quiz = Quiz::where('hash', $id)->first();
         return new QuizResource($quiz);
     }
 

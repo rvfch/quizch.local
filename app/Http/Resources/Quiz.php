@@ -27,6 +27,8 @@ class Quiz extends JsonResource
             'user_id' => $this->user_id,
             'questions_count' => $this->answers_count,
             'private' => (int)$this->isPrivate,
+            'password' => (string)$this->password,
+            'duration' => (int)$this->duration,
             'created_at' => (string)$this->created_at,
             'questions' => QuestionResource::collection(Question::where('quiz_id', $this->id)->get())
         ];

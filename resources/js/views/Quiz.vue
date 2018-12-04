@@ -1,7 +1,13 @@
 <template lang="html">
   <b-row class="d-flex justify-content-center align-items-center quiz-container">
     <b-col lg="10">
-      <b-card class="quiz-window" :header="quiz.title">
+      <b-card v-if="quiz === undefined" class="quiz-window">
+        <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz not found</b-alert>
+      </b-card>
+      <b-card v-else-if="ifPassed === true" class="quiz-window">
+        <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz already passed</b-alert>
+      </b-card>
+      <b-card v-else class="quiz-window" :header="quiz.title">
       <div id="quiz" v-if="!quizEnded">
         <p style="font-size: 18px;">
           {{ quiz.questions[questionNumber].question_text }}
@@ -13,7 +19,12 @@
         </div>
         </div>
         <div v-else>
-          <h2></h2>You have {{ points }} / {{ quiz.questions.length }} points.
+          <b-row class="mx-2">
+            <h3>You have {{ points }} / {{ quiz.questions.length }} points.</h3>
+            <b-alert class="mb-0 mt-3 w-100" :show="dismissCountdown" variant="info" @dismissed="dismissCountdown = 0" @dismiss-count-down="countDownChanged">
+                You will be redirected in <strong>{{ dismissCountdown }}</strong> seconds...
+            </b-alert>
+          </b-row>
         </div>
       </b-card>
     </b-col>
@@ -29,7 +40,9 @@
           results: [],
           result: {},
           quizEnded: false,
-          isPassed: false
+          isPassed: false,
+          dismissCountdown: 0,
+          dismissSecs: 5
         }
       },
       computed: {
@@ -41,6 +54,16 @@
         this.$store.dispatch('getquiz', this.$route.params.id)
       },
       methods: {
+        ifPassed () {
+          if (this.quiz === 'ALREADY_PASSED')
+            return true
+          return false
+        },
+        countDownChanged (dismissCountdown) {
+          this.dismissCountdown = dismissCountdown
+          if (this.dismissCountdown === 0)
+            this.$router.push('/myresults')
+        },
         nextQuestion(answerId) {
           if(this.questionNumber !== this.quiz.questions_count - 1) {
             this.questionNumber++
@@ -54,6 +77,7 @@
         endQuiz() {
           this.quizEnded = true
           this.calculateResult(this.results)
+          this.dismissCountdown = this.dismissSecs
 
           this.result = {
             quiz_id: this.quiz.id,

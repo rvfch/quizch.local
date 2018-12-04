@@ -15,6 +15,7 @@ Auth::routes();
 
 
 
+
 Route::any('/{all}', 'SpaController@index')->where(['all' => '.*']);
 
 //Route::get('/dashboard', 'HomeController@index')->name('home');

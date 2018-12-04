@@ -30,6 +30,7 @@ body {
 
 .content {
   overflow: auto;
+  background-color: white;
 }
 
 .sidebar {

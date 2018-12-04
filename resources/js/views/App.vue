@@ -45,6 +45,12 @@
     </b-container>
 </template>
 
+<style scoped>
+  a.router-link-exact-active {
+    font-weight: 500;
+  }
+</style>
+
 <script>
 export default {
     props: ['username', 'userid'],

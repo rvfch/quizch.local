@@ -54,6 +54,8 @@ export default new Vuex.Store({
         questions_count: quiz.questions_count,
         questions: quiz.questions,
         private: quiz.private,
+        password: quiz.password,
+        duration: quiz.duration
       }).then(() => this.dispatch('getquizzes'))
       .catch()
     },
@@ -71,19 +73,23 @@ export default new Vuex.Store({
         questions_count: quiz.questions_count,
         questions: quiz.questions,
         private: quiz.private,
+        password: quiz.password,
+        duration: quiz.duration
       }).then(() => this.dispatch('getquizzes'))
       .catch()
     },
-    getquiz({ commit, state }, quizId) {
-      return axios.get('/api/quiz/' + quizId)
-                  .then(res => {
+    async getquiz({ commit, state }, quizId) {
+      await axios.get(`/api/quiz/${quizId}`)
+                  .then( res =>
                     commit('GET_QUIZ', res.data.data)
-                  })
-                  .catch()
+                  )
+                  .catch(
+                    commit('GET_QUIZ', undefined)
+                  )
     },
     //results
-    getresults({ commit, state }) {
-      return axios.get('/api/results/' + state.userId)
+    async getresults({ commit, state }) {
+      await axios.get('/api/results/' + state.userId)
             .then(res => {
               commit('GET_RESULTS', res.data.data)
             }).catch()

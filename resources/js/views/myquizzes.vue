@@ -1,7 +1,7 @@
 <template lang="html">
     <div>
       <b-alert show variant="danger" v-if="quizzes.length === 0">You don't have quizzes.</b-alert>
-        <b-table v-else responsive :fields="fields" :items="quizzes">
+        <b-table v-else responsive :fields="fields" :items="quizzes" sort-desc.sync="true">
           <template slot="options" slot-scope="row">
             <b-button-group size="sm">
               <b-button variant="warning"><font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon></b-button>
@@ -14,10 +14,15 @@
             <b-button v-else variant="outline-success" size="sm" @click="row.item.private = 0; update(row.item.id, row.item)"><font-awesome-icon :icon="['fas', 'lock']"></font-awesome-icon></b-button>
           </template>
 
-          <template slot="title" slot-scope="data">
-
-            <strong><a href="#">{{ data.value }}</a></strong>
+          <template slot="title" slot-scope="row">
+            <a href="#" @click.stop="row.toggleDetails"><strong>{{ row.item.title }}</strong></a>
           </template>
+
+          <template slot="row-details" slot-scope="row">
+        <b-card>
+
+        </b-card>
+      </template>
         </b-table>
     </div>
 </template>
@@ -31,27 +36,28 @@ export default {
             fields: [
               {
                 key: 'private',
-                label: '#'
+                label: '#',
               },
               {
                 key: 'title',
-                label: 'Title'
+                label: 'Title',
               },
               {
                 key: 'description',
-                label: 'Description'
+                label: 'Description',
+
               },
               {
                 key: 'created_at',
-                label: 'Date'
+                label: 'Date',
               },
               {
                 key: 'users',
-                label: 'Users'
+                label: 'Users',
               },
               {
                 key: 'options',
-                label: 'Options'
+                label: 'Options',
               }
             ]
         }

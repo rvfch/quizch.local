@@ -35,7 +35,7 @@
             <b-input-group-prepend>
               <b-btn @click="private = 0" variant="outline-success"><font-awesome-icon :icon="['fas', 'lock-open']"></font-awesome-icon></b-btn>
             </b-input-group-prepend>
-            <b-form-input id="passwordInput" type="text" v-model="password" placeholder="Password..."></b-form-input>
+            <b-form-input id="passwordInput" type="password" v-model="password" placeholder="Password..."></b-form-input>
           </b-input-group>
           <b-btn v-else @click="private = 1" variant="outline-danger" class="w-100"><font-awesome-icon :icon="['fas', 'lock']"></font-awesome-icon></b-btn>
           </transition>
@@ -74,6 +74,7 @@ export default {
             question: '',
             answers: [],
             questions: [],
+            duration: 0,
 
             questionModalTitle: '',
             edit: false,
@@ -168,16 +169,22 @@ export default {
         {
           this.addQuiz()
           alert('Quiz successfully added :)')
+          this.$router.push('/myquizzes')
         }
       },
       addQuiz() {
+        let minutes = parseInt(this.timer.split(':')[0]),
+            seconds = parseInt(this.timer.split(':')[1])
+
         const quiz = {
           id: '',
           title: this.title,
           description: this.description,
           questions_count: this.questions.length,
           private: this.private,
-          questions: this.questions
+          password: this.private ? this.password : '',
+          questions: this.questions,
+          duration: minutes * 60 + seconds
         }
         this.$store.dispatch('addquiz', quiz)
       }
