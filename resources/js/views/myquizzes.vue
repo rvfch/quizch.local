@@ -63,9 +63,6 @@ export default {
         }
     },
     computed: {
-      userId() {
-        return this.$store.state.userId
-      },
       quizzes() {
         return this.$store.state.quizzes
       }

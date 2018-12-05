@@ -25,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        Passport::withCookieSerialization();
         Passport::routes(function($router) {
           $router->forAccessTokens();
         });

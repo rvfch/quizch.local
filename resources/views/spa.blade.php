@@ -14,15 +14,11 @@
 </head>
 <body>
     <div id="app">
-        @guest
-          @yield('content')
-        @endguest
-
-        @auth
-          <app username="{{ Auth::user()->name }}" userid="{{ Auth::id() }}"></app>
-        @endauth
+      <app></app>
     </div>
+    <script>
 
+    </script>
     <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

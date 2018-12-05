@@ -29,6 +29,7 @@ Route::middleware('auth:api')->post('/logout', 'AuthController@logout');
 // register
 Route::post('/register', 'AuthController@register');
 
+
 /*
 *   Quiz API
 *   QuizController

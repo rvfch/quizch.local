@@ -1,5 +1,5 @@
-require('./bootstrap');
-window.Vue = require('vue');
+require('./bootstrap')
+window.Vue = require('vue')
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -7,7 +7,7 @@ import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
+import Axios from 'axios'
 
 import App from './views/App'
 import Myquizzes from './views/myquizzes'
@@ -16,90 +16,113 @@ import Settings from './views/settings'
 import Stats from './views/stats'
 import Newquiz from './views/newquiz'
 import Quiz from './views/quiz'
+import Auth from './views/auth/auth'
 import NewFoundRoute from './views/NotFoundRoute'
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlusCircle, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
 import store from './store/index'
 
-library.add(faPlusCircle)
-library.add(faList)
-library.add(faBars)
-library.add(faTable)
-library.add(faChartBar)
-library.add(faSlidersH)
-library.add(faSignOutAlt)
-library.add(faUser)
-library.add(faEdit)
-library.add(faTrashAlt)
-library.add(faLock)
-library.add(faLockOpen)
-library.add(faClock)
-library.add(faCheck)
-library.add(faPlus)
+library.add(faPlusCircle, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt,
+            faLock, faLockOpen, faClock, faCheck, faPlus)
+
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+
+Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
-
-Vue.config.productionTip = false
-
-Vue.component(
-    'passport-clients',
-    require('./components/passport/Clients.vue')
-)
-
-Vue.component(
-    'passport-authorized-clients',
-    require('./components/passport/AuthorizedClients.vue')
-)
-
-Vue.component(
-    'passport-personal-access-tokens',
-    require('./components/passport/PersonalAccessTokens.vue')
-)
-
+// setup auth
+Vue.prototype.$http = Axios
+const token = localStorage.getItem('token')
+if (token) {
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer '.concat(token)
+}
 
 const router = new VueRouter({
   mode: 'history',
   routes: [
     {
+      path: '/auth',
+      name: 'Auth',
+      component: Auth,
+      meta: {
+        requiresVisitor: true
+      }
+    },
+    {
       path: '/',
-      name: 'myquizzes',
-      component: Myquizzes
+      name: 'My quizzes',
+      component: Myquizzes,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/myresults',
-      name: 'myresults',
-      component: Myresults
+      name: 'My results',
+      component: Myresults,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/settings',
-      name: 'settings',
-      component: Settings
+      name: 'Settings',
+      component: Settings,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/stats',
-      name: 'stats',
-      component: Stats
+      name: 'Statistics',
+      component: Stats,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/newquiz',
-      name: 'newquiz',
-      component: Newquiz
+      name: 'New quiz',
+      component: Newquiz,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/quiz/:id',
       name: 'quiz',
-      component: Quiz
+      component: Quiz,
+      meta: {
+        requiresAuth: true
+      }
     },
-    {
-      path: '*',
-      name: 'myquizzes',
-      component: Myquizzes
-    }
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isLoggedIn) {
+      next({
+        name: 'Auth'
+      })
+    } else {
+      next()
+    }
+  } else if (to.matched.some(record => record.meta.requiresVisitor)) {
+      if (store.getters.isLoggedIn) {
+        next({
+          name: 'myquizzes'
+        })
+      } else {
+        next()
+      }
+  } else {
+    next()
+  }
 })
 
 const app = new Vue({

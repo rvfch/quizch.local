@@ -6,26 +6,46 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userId: null,
-    userName: null,
+    //loader
+    loading: false,
+
+    //
     quizzes: [],
     results: [],
-    quiz: []
+    quiz: [],
+
+    // auth
+    status: '',
+    token: localStorage.getItem('token') || null,
+    user: {}
   },
   getters: {
-    userId: state => {
-      return state.userId
-    },
+    isLoggedIn: state => !!state.token,
+    authStatus: state => state.status,
     quiz: state => {
       return state.quiz
     }
   },
   mutations: {
-    SET_USER_ID: (state, userId) => {
-      state.userId = userId
+    AUTH_REQUEST: (state) => {
+      state.status = 'loading'
     },
-    SET_USER_NAME: (state, userName) => {
-      state.userName = userName
+    AUTH_SUCCESS: (state, token) => {
+      state.status = 'success'
+      state.token = token
+    },
+    AUTH_ERROR: (state) => {
+      state.status = 'error'
+    },
+    LOGOUT: (state) => {
+      state.status = ''
+      state.token = ''
+      state.quizzes = []
+      state.results = []
+      state.quiz = []
+    },
+    SET_USER: (state, user) => {
+      state.user = user
     },
     GET_QUIZZES: (state, quizzes) => {
       state.quizzes = quizzes
@@ -38,71 +58,193 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    // auth
+    login({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit('AUTH_REQUEST')
+        axios.post('/api/login', {
+          username: user.username,
+          password: user.password,
+        })
+        .then(resp => {
+          const token = resp.data.access_token
+          commit('AUTH_SUCCESS', token)
+          localStorage.setItem('token', token)
+          axios.defaults.headers.common['Authorization'] = 'Bearer '.concat(token)
+          this.dispatch('getUser')
+          resolve(resp)
+        }).catch(err => {
+          commit('AUTH_ERROR', err)
+          localStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+    register({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit('AUTH_REQUEST')
+        axios.post('/api/register', { name: user.name, email: user.email, password: user.password })
+        .then(resp => {
+          axios.post('/api/login', { username: user.email, password: user.password })
+          .then(res => {
+            const token = res.data.access_token
+            commit('AUTH_SUCCESS', token)
+            localStorage.setItem('token', token)
+            axios.defaults.headers.common['Authorization'] = 'Bearer '.concat(token)
+            this.dispatch('getUser')
+            resolve(resp)
+          })
+        })
+        .catch(err => {
+          commit('AUTH_ERROR', err)
+          localStorage.removeItem('token')
+          reject(err)
+        })
+      })
+    },
+    logout({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios.post('/api/logout').
+        then(resp => {
+          commit('LOGOUT')
+          localStorage.removeItem('token')
+          delete axios.defaults.headers.common['Authorization']
+          resolve(resp)
+        }).catch(err => {
+          commit('LOGOUT')
+          localStorage.removeItem('token')
+          delete axios.defaults.headers.common['Authorization']
+          reject(err)
+        })
+      })
+    },
+    getUser({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        axios.get('/api/user', {
+          params: {
+            Authorization: 'Bearer '.concat(state.token)
+          }
+        })
+        .then(resp => {
+          commit('SET_USER', resp.data)
+          this.dispatch('getquizzes')
+          resolve(resp)
+        })
+        .catch(err => {
+          reject(err)
+        }
+        )
+      })
+    },
     // quizzes
     getquizzes({ commit, state }) {
-      return axios.get('/api/quizzes/' + state.userId)
-            .then(res => {
-              commit('GET_QUIZZES', res.data.data)
-            }).catch()
+      return new Promise((resolve, reject) => {
+        axios.get(`/api/quizzes/${state.user.id}`)
+              .then(res => {
+                commit('GET_QUIZZES', res.data.data)
+                resolve(res)
+              }).catch(err => {
+                reject(err)
+              })
+      })
     },
     updatequiz({ state }, quiz) {
-      axios.put('/api/quiz', {
-        id: quiz.id,
-        title: quiz.title,
-        description: quiz.description,
-        user_id: quiz.user_id,
-        questions_count: quiz.questions_count,
-        questions: quiz.questions,
-        private: quiz.private,
-        password: quiz.password,
-        duration: quiz.duration
-      }).then(() => this.dispatch('getquizzes'))
-      .catch()
+      return new Promise((resolve, reject) => {
+        axios.put('/api/quiz', {
+          id: quiz.id,
+          title: quiz.title,
+          description: quiz.description,
+          user_id: quiz.user_id,
+          questions_count: quiz.questions_count,
+          questions: quiz.questions,
+          private: quiz.private,
+          password: quiz.password,
+          duration: quiz.duration
+        }).then(res => {
+          this.dispatch('getquizzes')
+          resolve(res)
+        })
+        .catch(err => {
+          reject(err)
+        })
+      })
     },
     deletequiz({}, quizId) {
-      axios.delete('/api/quiz/' + quizId)
-          .then(() => this.dispatch('getquizzes'))
-          .catch()
+      return new Promise((resolve, reject) => {
+        axios.delete('/api/quiz/' + quizId)
+            .then(res => {
+              this.dispatch('getquizzes')
+              resolve(res)
+            })
+            .catch(err => {
+              reject(err)
+            })
+      })
     },
     addquiz({ state }, quiz) {
-      axios.post('/api/quiz', {
-        id: quiz.id,
-        title: quiz.title,
-        description: quiz.description,
-        user_id: state.userId,
-        questions_count: quiz.questions_count,
-        questions: quiz.questions,
-        private: quiz.private,
-        password: quiz.password,
-        duration: quiz.duration
-      }).then(() => this.dispatch('getquizzes'))
-      .catch()
+      return new Promise((resolve, reject) => {
+        axios.post('/api/quiz', {
+          id: quiz.id,
+          title: quiz.title,
+          description: quiz.description,
+          user_id: state.user.id,
+          questions_count: quiz.questions_count,
+          questions: quiz.questions,
+          private: quiz.private,
+          password: quiz.password,
+          duration: quiz.duration
+        }).then(res => {
+          this.dispatch('getquizzes')
+          resolve(res)
+        })
+        .catch(err => {
+          reject(err)
+        })
+      })
     },
-    async getquiz({ commit, state }, quizId) {
-      await axios.get(`/api/quiz/${quizId}`)
-                  .then( res =>
-                    commit('GET_QUIZ', res.data.data)
-                  )
-                  .catch(
-                    commit('GET_QUIZ', undefined)
-                  )
+    getquiz({ commit, state }, quizId) {
+      return new Promise((resolve, reject) => {
+        axios.get(`/api/quiz/${quizId}`)
+                    .then(res => {
+                      commit('GET_QUIZ', res.data.data)
+                      resolve(res)
+                    }
+                    )
+                    .catch(err => {
+                      commit('GET_QUIZ', undefined)
+                      reject(err)
+                    }
+                    )
+      })
     },
     //results
-    async getresults({ commit, state }) {
-      await axios.get('/api/results/' + state.userId)
-            .then(res => {
-              commit('GET_RESULTS', res.data.data)
-            }).catch()
+    getresults({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        axios.get(`/api/results/${state.user.id}`)
+              .then(res => {
+                commit('GET_RESULTS', res.data.data)
+                resolve(res)
+              }).catch(err => {
+                reject(err)
+              })
+      })
     },
     addresult({ state }, result) {
-      axios.post('/api/result', {
-        id: '',
-        user_id: state.userId,
-        quiz_id: result.quiz_id,
-        right_answers: result.right_answers,
-        isPassed: result.isPassed
-      }).then(() => this.dispatch('getresults'))
-        .catch()
+      return new Promise((reject, resolve) => {
+        axios.post('/api/result', {
+          id: '',
+          user_id: state.user.id,
+          quiz_id: result.quiz_id,
+          right_answers: result.right_answers,
+          isPassed: result.isPassed
+        }).then(res => {
+          this.dispatch('getresults')
+          resolve(res)
+        })
+          .catch(err => {
+            reject(err)
+          })
+      })
     }
   }
 })

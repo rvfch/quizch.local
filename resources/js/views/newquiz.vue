@@ -26,7 +26,7 @@
             <b-input-group-text slot="prepend">
               <font-awesome-icon :icon="['fas', 'clock']"></font-awesome-icon>
             </b-input-group-text>
-              <b-form-input id="timerInput" type="text" v-model="timer" required placeholder="hh:mm"></b-form-input>
+              <b-form-input id="timerInput" autocomplete="off" type="time" v-model="timer" required placeholder="hh:mm" value="01:00"></b-form-input>
             </b-input-group>
           </b-form-group>
           <b-form-group id="passwordInputGroup" label="Privacy: " label-for="passwordInput">
@@ -169,7 +169,7 @@ export default {
         {
           this.addQuiz()
           alert('Quiz successfully added :)')
-          this.$router.push('/myquizzes')
+          this.$router.push('/')
         }
       },
       addQuiz() {

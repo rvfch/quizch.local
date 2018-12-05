@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-container fluid v-if="$route.name !== 'quiz'">
+  <b-container fluid v-if="$route.name !== 'quiz' && $route.name !== 'Auth'">
       <b-navbar toggleable type="dark" variant="primary">
         <b-navbar-toggle target="nav_text_collapse"></b-navbar-toggle>
         <b-navbar-brand>Quizch</b-navbar-brand>
@@ -15,9 +15,9 @@
           <b-navbar-nav class="ml-auto">
             <b-nav-item-dropdown right>
               <template slot="button-content">
-                <strong><font-awesome-icon icon="user" /> Rvfch</strong>
+                <strong><font-awesome-icon icon="user" /> {{ $store.state.user.email }}</strong>
               </template>
-              <b-dropdown-item @click.prevent="logOut()"><font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Log Out</b-dropdown-item>
+              <b-dropdown-item @click="logOut()"><font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Log Out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -25,11 +25,11 @@
       <b-row no-gutters>
         <b-col tag="nav" md="2" sm="3" class="px-4 d-none d-md-block sidebar">
             <ul>
-              <li><router-link tag="a" :to="{ name: 'newquiz', params: {} }"><font-awesome-icon icon="plus-circle" /> New quiz</router-link></li>
-              <li><router-link tag="a" :to="{ name: 'myquizzes', params: { userId: userid } }"><font-awesome-icon :icon="['fas', 'bars']" /> My quizzes</router-link></li>
-              <li><router-link tag="a" :to="{ name: 'myresults', params: {} }"><font-awesome-icon :icon="['fas', 'table']" /> My results</router-link></li>
-              <li><router-link tag="a" :to="{ name: 'stats', params: {} }"><font-awesome-icon icon="chart-bar" /> Statistics</router-link></li>
-              <li><router-link tag="a" :to="{ name: 'settings', params: {} }"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'New quiz', params: {} }"><font-awesome-icon icon="plus-circle" /> New quiz</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'My quizzes', params: {} }"><font-awesome-icon :icon="['fas', 'bars']" /> My quizzes</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'My results', params: {} }"><font-awesome-icon :icon="['fas', 'table']" /> My results</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'Statistics', params: {} }"><font-awesome-icon icon="chart-bar" /> Statistics</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'Settings', params: {} }"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</router-link></li>
             </ul>
         </b-col>
         <b-col tag="main" role="main" md="9" lg="10" class="content ml-sm-auto px-4">
@@ -53,24 +53,19 @@
 
 <script>
 export default {
-    props: ['username', 'userid'],
-    data() {
-        return {
-            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-    },
-    created() {
-      this.$store.commit('SET_USER_ID', this.userid)
-      this.$store.commit('SET_USER_NAME', this.username)
-    },
-    methods: {
-        logOut: function() {
-            axios.post('/logout').then(resp => {
-              location.reload()
-            }).catch(err => {
-              location.reload()
-            })
-        }
+  mounted() {
+    this.$store.dispatch('getUser')
+  },
+  methods: {
+    logOut: function() {
+      this.$store.dispatch('logout')
+      .then(() => {
+        this.$router.push({ name: 'Auth' })
+      })
+      .catch(err => {
+        this.$router.push({ name: 'Auth' })
+      })
     }
+  }
 }
 </script>
