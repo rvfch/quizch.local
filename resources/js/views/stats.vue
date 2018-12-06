@@ -1,5 +1,8 @@
 <template lang="html">
-  <div>
+  <div v-if="$store.state.loading" class="loading">
+    Loading...
+  </div>
+  <div v-else>
     Statistics
   </div>
 </template>

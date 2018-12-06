@@ -8,7 +8,6 @@ use App\Quiz;
 use App\Question;
 use App\Result;
 use App\QuestionAnswer;
-use Auth;
 use App\Http\Resources\Quiz as QuizResource;
 
 use Illuminate\Support\Facades\Hash;
@@ -86,6 +85,12 @@ class QuizController extends Controller
     public function show($id)
     {
         $quiz = Quiz::where('hash', $id)->first();
+        $result = Result::select('user_id')->where('quiz_id', $quiz->id)->first();
+        $checkRes = $result ? true : false;
+        if($checkRes) {
+          if($result->user_id == auth()->id())
+            return response()->json('ALREADY_PASSED');
+        }
         return new QuizResource($quiz);
     }
 

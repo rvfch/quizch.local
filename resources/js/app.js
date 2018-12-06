@@ -8,6 +8,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Axios from 'axios'
+import VueClipboard from 'vue-clipboard2'
 
 import App from './views/App'
 import Myquizzes from './views/myquizzes'
@@ -20,11 +21,11 @@ import Auth from './views/auth/auth'
 import NewFoundRoute from './views/NotFoundRoute'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlusCircle, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
+import { faPlusCircle, faCopy, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store/index'
 
-library.add(faPlusCircle, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt,
+library.add(faPlusCircle, faCopy, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt,
             faLock, faLockOpen, faClock, faCheck, faPlus)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
@@ -34,6 +35,7 @@ Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
+Vue.use(VueClipboard)
 // setup auth
 Vue.prototype.$http = Axios
 const token = localStorage.getItem('token')
@@ -127,6 +129,7 @@ router.beforeEach((to, from, next) => {
 
 const app = new Vue({
   el: '#app',
+  computed: Vuex.mapState(['loading', 'quizzes', 'results', 'quiz']),
   components: { App },
   store,
   router,

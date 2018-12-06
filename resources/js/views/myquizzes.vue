@@ -1,7 +1,10 @@
 <template lang="html">
-    <div>
-      <b-alert show variant="danger" v-if="quizzes.length === 0">You don't have quizzes.</b-alert>
-        <b-table v-else responsive :fields="fields" :items="quizzes" sort-desc.sync="true">
+  <div v-if="$store.state.loading" class="loading">
+    Loading...
+  </div>
+  <b-alert show v-else-if="quizzes.length === 0" variant="danger">You don't have quizzes.</b-alert>
+    <div v-else>
+        <b-table responsive :fields="fields" :items="quizzes" sort-desc.sync="true">
           <template slot="options" slot-scope="row">
             <b-button-group size="sm">
               <b-button variant="warning"><font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon></b-button>
@@ -20,7 +23,12 @@
 
           <template slot="row-details" slot-scope="row">
         <b-card>
-
+          <b-input-group>
+            <b-form-input type="text" disabled :value="`http://quizch.local/quiz/${row.item.hash}`" ref="quizURL"></b-form-input>
+            <b-button variant="outline-primary" slot="prepend" type="button" @click="copyURL()">
+              <font-awesome-icon :icon="['fas', 'copy']"></font-awesome-icon>
+            </b-button>
+          </b-input-group>
         </b-card>
       </template>
         </b-table>
@@ -28,7 +36,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
     data() {
@@ -71,6 +78,9 @@ export default {
         this.$store.dispatch('getquizzes')
     },
     methods: {
+      copyURL() {
+        this.$copyText(this.$refs.quizURL.value)
+      },
       update(id, data) {
         this.$store.dispatch('updatequiz', data)
       },

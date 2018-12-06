@@ -30,6 +30,7 @@ class Quiz extends JsonResource
             'password' => (string)$this->password,
             'duration' => (int)$this->duration,
             'created_at' => (string)$this->created_at,
+            'hash' => (string)$this->hash,
             'questions' => QuestionResource::collection(Question::where('quiz_id', $this->id)->get())
         ];
     }

@@ -1,11 +1,11 @@
 <template lang="html">
   <b-row class="d-flex justify-content-center align-items-center quiz-container">
     <b-col lg="10">
-      <b-card v-if="quiz === undefined" class="quiz-window">
-        <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz not found</b-alert>
-      </b-card>
-      <b-card v-else-if="ifPassed === true" class="quiz-window">
+      <b-card v-if="ifPassed" class="quiz-window">
         <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz already passed</b-alert>
+      </b-card>
+      <b-card v-else-if="quiz === undefined" class="quiz-window">
+        <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz not found</b-alert>
       </b-card>
       <b-card v-else class="quiz-window" :header="quiz.title">
       <div id="quiz" v-if="!quizEnded">
@@ -41,6 +41,7 @@
           result: {},
           quizEnded: false,
           isPassed: false,
+          ifPassed: false,
           dismissCountdown: 0,
           dismissSecs: 5
         }
@@ -52,17 +53,17 @@
       },
       mounted() {
         this.$store.dispatch('getquiz', this.$route.params.id)
+        .then(res => {
+          if (res.data === 'ALREADY_PASSED')
+            this.ifPassed = true
+        })
+        .catch(err => console.log(err))
       },
       methods: {
-        ifPassed () {
-          if (this.quiz === 'ALREADY_PASSED')
-            return true
-          return false
-        },
         countDownChanged (dismissCountdown) {
           this.dismissCountdown = dismissCountdown
           if (this.dismissCountdown === 0)
-            this.$router.push('/myresults')
+            this.$router.push({ name: 'My results' })
         },
         nextQuestion(answerId) {
           if(this.questionNumber !== this.quiz.questions_count - 1) {
@@ -91,7 +92,6 @@
             if (this.quiz.questions[index].answers.find(x => x.id === element).correct === 1)
               this.points++
           })
-
           if(this.points > Math.floor(this.quiz.questions.length / 2))
             this.isPassed = true
           else
@@ -101,9 +101,11 @@
     }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 .quiz-container {
   height: 100vh;
+  background: #36D1DC;  /* fallback for old browsers */
+  background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .quiz-answers {
@@ -111,11 +113,8 @@
 }
 
 .quiz-window {
-  box-shadow: 0 0 100px rgba(0,0,0,.15)
+  box-shadow: 0 0 100px rgba(0,0,0,.15);
+  min-height: 600px;
 }
 
-body {
-  background: #36D1DC;  /* fallback for old browsers */
-  background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
 </style>

@@ -26,7 +26,9 @@
             <b-input-group-text slot="prepend">
               <font-awesome-icon :icon="['fas', 'clock']"></font-awesome-icon>
             </b-input-group-text>
-              <b-form-input id="timerInput" autocomplete="off" type="time" v-model="timer" required placeholder="hh:mm" value="01:00"></b-form-input>
+              <b-form-input id="timerHoursInput" type="text" v-model="timerHours" required placeholder="HH"></b-form-input>
+              <b-form-input id="timerMinutesInput" type="text" v-model="timerMinutes" required placeholder="MM"></b-form-input>
+              <b-form-input id="timerSecondsInput" type="text" v-model="timerSeconds" required placeholder="SS"></b-form-input>
             </b-input-group>
           </b-form-group>
           <b-form-group id="passwordInputGroup" label="Privacy: " label-for="passwordInput">
@@ -68,7 +70,9 @@ export default {
         return {
             title: '',
             description: '',
-            timer: '',
+            timerHours: '',
+            timerMinutes: '',
+            timerSeconds: '',
             private: false,
             password: '',
             question: '',
@@ -168,13 +172,10 @@ export default {
         else
         {
           this.addQuiz()
-          alert('Quiz successfully added :)')
-          this.$router.push('/')
         }
       },
       addQuiz() {
-        let minutes = parseInt(this.timer.split(':')[0]),
-            seconds = parseInt(this.timer.split(':')[1])
+        const duration = parseInt(this.timerHours) * 60 * 60 + parseInt(this.timerMinutes) * 60 + parseInt(this.timerSeconds)
 
         const quiz = {
           id: '',
@@ -182,11 +183,19 @@ export default {
           description: this.description,
           questions_count: this.questions.length,
           private: this.private,
-          password: this.private ? this.password : '',
+          password: this.password || '',
           questions: this.questions,
-          duration: minutes * 60 + seconds
+          duration: duration
         }
         this.$store.dispatch('addquiz', quiz)
+        .then(res => {
+          alert('Quiz successfully added :)')
+          this.$router.push('/')
+        })
+        .catch(err => {
+          console.log(err)
+          console.log(quiz)
+        })
       }
     }
 }

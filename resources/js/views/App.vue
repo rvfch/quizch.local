@@ -5,11 +5,11 @@
         <b-navbar-brand>Quizch</b-navbar-brand>
         <b-collapse is-nav id="nav_text_collapse">
           <b-navbar-nav class="d-lg-none d-md-none d-sm-flex">
-            <b-nav-item :to="{name: 'newquiz'}"><font-awesome-icon icon="plus-circle" /> New quiz</b-nav-item>
-            <b-nav-item :to="{name: 'myquizzes'}"><font-awesome-icon :icon="['fas', 'bars']" /> My quizzes</b-nav-item>
-            <b-nav-item :to="{name: 'myresults'}"><font-awesome-icon :icon="['fas', 'table']" /> My results</b-nav-item>
-            <b-nav-item :to="{name: 'stats'}"><font-awesome-icon icon="chart-bar" /> Stats</b-nav-item>
-            <b-nav-item :to="{name: 'settings'}"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</b-nav-item>
+            <b-nav-item :to="{name: 'New quiz'}"><font-awesome-icon icon="plus-circle" /> New quiz</b-nav-item>
+            <b-nav-item :to="{name: 'My quizzes'}"><font-awesome-icon :icon="['fas', 'bars']" /> My quizzes</b-nav-item>
+            <b-nav-item :to="{name: 'My results'}"><font-awesome-icon :icon="['fas', 'table']" /> My results</b-nav-item>
+            <b-nav-item :to="{name: 'Statistics'}"><font-awesome-icon icon="chart-bar" /> Stats</b-nav-item>
+            <b-nav-item :to="{name: 'Settings'}"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</b-nav-item>
           </b-navbar-nav>
 
           <b-navbar-nav class="ml-auto">

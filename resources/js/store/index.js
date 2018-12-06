@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     //loader
-    loading: false,
+    loading: true,
 
     //
     quizzes: [],
@@ -55,6 +55,9 @@ export default new Vuex.Store({
     },
     GET_QUIZ: (state, quiz) => {
       state.quiz = quiz
+    },
+    LOADING: (state, loading) => {
+      state.loading = loading
     }
   },
   actions: {
@@ -136,19 +139,22 @@ export default new Vuex.Store({
         )
       })
     },
+
     // quizzes
     getquizzes({ commit, state }) {
+      commit('LOADING', true)
       return new Promise((resolve, reject) => {
         axios.get(`/api/quizzes/${state.user.id}`)
               .then(res => {
                 commit('GET_QUIZZES', res.data.data)
+                commit('LOADING', false)
                 resolve(res)
               }).catch(err => {
                 reject(err)
               })
       })
     },
-    updatequiz({ state }, quiz) {
+    updatequiz({ commit, state }, quiz) {
       return new Promise((resolve, reject) => {
         axios.put('/api/quiz', {
           id: quiz.id,
@@ -162,6 +168,7 @@ export default new Vuex.Store({
           duration: quiz.duration
         }).then(res => {
           this.dispatch('getquizzes')
+          commit('LOADING', false)
           resolve(res)
         })
         .catch(err => {
@@ -169,11 +176,12 @@ export default new Vuex.Store({
         })
       })
     },
-    deletequiz({}, quizId) {
+    deletequiz({ commit }, quizId) {
       return new Promise((resolve, reject) => {
         axios.delete('/api/quiz/' + quizId)
             .then(res => {
               this.dispatch('getquizzes')
+              commit('LOADING', false)
               resolve(res)
             })
             .catch(err => {
@@ -181,7 +189,7 @@ export default new Vuex.Store({
             })
       })
     },
-    addquiz({ state }, quiz) {
+    addquiz({ commit, state }, quiz) {
       return new Promise((resolve, reject) => {
         axios.post('/api/quiz', {
           id: quiz.id,
@@ -195,6 +203,7 @@ export default new Vuex.Store({
           duration: quiz.duration
         }).then(res => {
           this.dispatch('getquizzes')
+          commit('LOADING', false)
           resolve(res)
         })
         .catch(err => {
@@ -203,10 +212,12 @@ export default new Vuex.Store({
       })
     },
     getquiz({ commit, state }, quizId) {
+      commit('LOADING', true)
       return new Promise((resolve, reject) => {
         axios.get(`/api/quiz/${quizId}`)
                     .then(res => {
                       commit('GET_QUIZ', res.data.data)
+                      commit('LOADING', false)
                       resolve(res)
                     }
                     )
@@ -219,17 +230,19 @@ export default new Vuex.Store({
     },
     //results
     getresults({ commit, state }) {
+      commit('LOADING', true)
       return new Promise((resolve, reject) => {
         axios.get(`/api/results/${state.user.id}`)
               .then(res => {
                 commit('GET_RESULTS', res.data.data)
+                commit('LOADING', false)
                 resolve(res)
               }).catch(err => {
                 reject(err)
               })
       })
     },
-    addresult({ state }, result) {
+    addresult({ commit, state }, result) {
       return new Promise((reject, resolve) => {
         axios.post('/api/result', {
           id: '',
@@ -239,6 +252,7 @@ export default new Vuex.Store({
           isPassed: result.isPassed
         }).then(res => {
           this.dispatch('getresults')
+          commit('LOADING', false)
           resolve(res)
         })
           .catch(err => {

@@ -40,7 +40,7 @@ Route::post('/register', 'AuthController@register');
 // quizzes of user
 Route::get('quizzes/{user_id}', 'QuizController@getUser');
 // return quiz
-Route::get('quiz/{id}', 'QuizController@show');
+Route::middleware('auth:api')->get('quiz/{id}', 'QuizController@show');
 // create new quiz
 Route::post('quiz', 'QuizController@store');
 // update quiz
