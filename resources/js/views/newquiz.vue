@@ -42,6 +42,7 @@
           <b-btn v-else @click="private = 1" variant="outline-danger" class="w-100"><font-awesome-icon :icon="['fas', 'lock']"></font-awesome-icon></b-btn>
           </transition>
           </b-form-group>
+          <b-btn @click="handleQuiz($event)" variant="success" class="btn-block w-100 d-flex align-items-center px-0" size="md"><span class="w-25 d-flex pl-2"><font-awesome-icon :icon="['fas', 'plus-circle']"></font-awesome-icon></span><span class="w-50">CREATE QUIZ</span><span class="w-25"></span></b-btn>
           </b-col>
           <b-col>
             <label>Questions: </label>
@@ -59,7 +60,6 @@
             <b-btn v-b-modal.addQuestionModal @click="questionModalShown()" variant="outline-primary" class="w-100 mb-3 d-flex align-items-center px-0" size="sm">
               <span class="w-25 d-flex pl-2"><font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon></span><span class="w-50">ADD QUESTION</span><span class="w-25"></span></b-btn>
           </b-col>
-          <b-btn @click="handleQuiz($event)" variant="success" class="w-100 d-flex align-items-center px-0" size="md"><span class="w-25 d-flex pl-2"><font-awesome-icon :icon="['fas', 'plus-circle']"></font-awesome-icon></span><span class="w-50">CREATE QUIZ</span><span class="w-25"></span></b-btn>
         </b-form-row>
     </div>
 </template>

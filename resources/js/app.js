@@ -21,11 +21,11 @@ import Auth from './views/auth/auth'
 import NewFoundRoute from './views/NotFoundRoute'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlusCircle, faCopy, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faBell, faLink, faEye, faPlusCircle, faCopy, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store/index'
 
-library.add(faPlusCircle, faCopy, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt,
+library.add(faEnvelope, faBell, faLink, faEye, faPlusCircle, faCopy, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt,
             faLock, faLockOpen, faClock, faCheck, faPlus)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

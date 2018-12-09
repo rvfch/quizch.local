@@ -1,14 +1,21 @@
 <template lang="html">
   <b-row class="d-flex justify-content-center align-items-center quiz-container">
     <b-col lg="10">
-      <b-card v-if="ifPassed" class="quiz-window">
+      <b-card no-body v-if="previewMode" class="quiz-window" :header="quiz.title + ' PREVIEW MODE'">
+        <b-card-body class="d-flex flex-column justify-content-between">
+
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="ifPassed" class="quiz-window">
         <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz already passed</b-alert>
+        <b-button variant="outline-primary" class="w-100 mt-3" @click="$router.push('/')">Click to go back</b-button>
       </b-card>
       <b-card v-else-if="quiz === undefined" class="quiz-window">
         <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz not found</b-alert>
+        <b-button variant="outline-primary" class="w-100 mt-3" @click="$router.push('/')">Click to go back</b-button>
       </b-card>
-      <b-card v-else class="quiz-window" :header="quiz.title">
-      <div id="quiz" v-if="!quizEnded">
+      <b-card no-body v-else class="quiz-window" :header="quiz.title">
+      <b-card-body class="d-flex flex-column justify-content-between" v-if="!quizEnded">
         <p style="font-size: 18px;">
           {{ quiz.questions[questionNumber].question_text }}
         </p>
@@ -17,15 +24,15 @@
             {{ answer.text }}
           </b-btn>
         </div>
-        </div>
-        <div v-else>
+      </b-card-body>
+        <b-card-body v-else>
           <b-row class="mx-2">
             <h3>You have {{ points }} / {{ quiz.questions.length }} points.</h3>
             <b-alert class="mb-0 mt-3 w-100" :show="dismissCountdown" variant="info" @dismissed="dismissCountdown = 0" @dismiss-count-down="countDownChanged">
                 You will be redirected in <strong>{{ dismissCountdown }}</strong> seconds...
             </b-alert>
           </b-row>
-        </div>
+        </b-card-body>
       </b-card>
     </b-col>
   </b-row>
@@ -43,7 +50,9 @@
           isPassed: false,
           ifPassed: false,
           dismissCountdown: 0,
-          dismissSecs: 5
+          dismissSecs: 5,
+          timer: '',
+          previewMode: true
         }
       },
       computed: {
@@ -112,9 +121,14 @@
   margin-top: 6rem;
 }
 
+.quiz {
+  height: 100%;
+}
+
 .quiz-window {
   box-shadow: 0 0 100px rgba(0,0,0,.15);
   min-height: 600px;
+  height: 100%;
 }
 
 </style>

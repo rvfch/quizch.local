@@ -8,6 +8,7 @@ use App\Question;
 use App\QuestionAnswer;
 use App\Http\Resources\QuestionCollection;
 use App\Http\Resources\Question as QuestionResource;
+use App\Result;
 use App\Quiz as QuizModel;
 
 class Quiz extends JsonResource
@@ -31,6 +32,7 @@ class Quiz extends JsonResource
             'duration' => (int)$this->duration,
             'created_at' => (string)$this->created_at,
             'hash' => (string)$this->hash,
+            'users' => Result::where('quiz_id', $this->id)->get()->count(),
             'questions' => QuestionResource::collection(Question::where('quiz_id', $this->id)->get())
         ];
     }
@@ -38,7 +40,7 @@ class Quiz extends JsonResource
     public function with($request)
     {
         return [
-            'version' => '1.0',
+            'version' => '1.2',
             'author' => 'Roman "rvfch" Filatov',
             'author_url' => url('http://rvfch.github.io')
         ];

@@ -9,16 +9,20 @@
             <b-button-group size="sm">
               <b-button variant="warning"><font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon></b-button>
               <b-button variant="danger" @click="deletequiz(row.item.id)"><font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon></b-button>
+              <b-button variant="secondary" @click.stop="row.toggleDetails"><font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon></b-button>
             </b-button-group>
           </template>
 
           <template slot="private" slot-scope="row">
+            <b-button-group size="sm">
             <b-button v-if="row.item.private === 0" size="sm" variant="outline-danger" @click="row.item.private = 1; update(row.item.id, row.item)"><font-awesome-icon :icon="['fas', 'lock-open']"></font-awesome-icon></b-button>
             <b-button v-else variant="outline-success" size="sm" @click="row.item.private = 0; update(row.item.id, row.item)"><font-awesome-icon :icon="['fas', 'lock']"></font-awesome-icon></b-button>
+            <b-button size="sm" variant="outline-info"><font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon></b-button>
+          </b-button-group>
           </template>
 
           <template slot="title" slot-scope="row">
-            <a href="#" @click.stop="row.toggleDetails"><strong>{{ row.item.title }}</strong></a>
+            <a href="#"><strong>{{ row.item.title }}</strong></a>
           </template>
 
           <template slot="row-details" slot-scope="row">

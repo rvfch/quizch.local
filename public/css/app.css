@@ -1,8 +1,9 @@
-@import url(https://fonts.googleapis.com/css?family=Inconsolata|Open+Sans:300,400,600,700&amp;
-
-subset=cyrillic);html,
+@import url(https://fonts.googleapis.com/css?family=Poppins:400,700|Roboto:300,400,700);html,
 body {
   height: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  font-size: 1em;
 }
 
 .container-fluid {
@@ -17,10 +18,10 @@ body {
   z-index: 101;
   position: fixed;
   width: 100%;
-  -webkit-box-shadow: 0 -1px 30px rgba(0, 0, 0, 0.3);
-          box-shadow: 0 -1px 30px rgba(0, 0, 0, 0.3);
-  background: -webkit-gradient(linear, right top, left top, from(#56ccf2), to(#2f80ed)) !important;
-  background: linear-gradient(to left, #56ccf2, #2f80ed) !important;
+  -webkit-box-shadow: 0 -1px 30px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 -1px 30px rgba(0, 0, 0, 0.2);
+  background: -webkit-gradient(linear, right top, left top, from(#56ccf2), to(#2f80ed));
+  background: linear-gradient(to left, #56ccf2, #2f80ed);
 }
 
 .container-fluid {
@@ -40,11 +41,34 @@ body {
   bottom: 0;
   width: 18em;
   z-index: 100;
-  padding-top: 15px;
   height: 100vh;
   background-color: #f5f5f5;
   -webkit-box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
           box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .top-sidebar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 1em 1em;
+  white-space: nowrap;
+}
+
+.sidebar .top-sidebar span {
+  font-size: 1.2em;
+}
+
+.sidebar .top-sidebar a {
+  color: #6c757d;
+  font-size: 1.5em;
+  padding-right: 1em;
 }
 
 .sidebar ul {
@@ -57,18 +81,36 @@ body {
   font-weight: 400;
   display: block;
   padding: 0.5em 0;
+  padding-left: 0.5em;
   text-decoration: none;
   text-transform: uppercase;
   -webkit-transition: all ease-in-out 0.15s;
   transition: all ease-in-out 0.15s;
-  color: black;
+  color: #343a40;
   white-space: nowrap;
 }
 
+.sidebar ul li .btn-newquiz {
+  background-color: #28a745;
+  color: white;
+}
+
+.sidebar ul li .btn-newquiz:hover {
+  color: #f8f9fa;
+  background-color: #23903c;
+}
+
 .sidebar ul li a:hover {
-  color: #bdbdbe;
+  color: black;
+  background-color: #f5f5f5;
   -webkit-transition: all ease-in-out 0.15s;
   transition: all ease-in-out 0.15s;
+}
+
+.sidebar ul li a.router-link-exact-active {
+  font-weight: 500;
+  background-color: #007bff !important;
+  color: white;
 }
 
 main.auth {

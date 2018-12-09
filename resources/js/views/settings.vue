@@ -1,7 +1,10 @@
 <template lang="html">
-  <div>
+  <div v-if="$store.state.loading" class="loading">
+    Loading...
+  </div>
+  <div v-else>
     <b-card class="mb-3">
-      <span style="font-weight: 500; font-size:18px;">ID: 12313</span>
+      <span style="font-weight: 500; font-size:18px;">ID: {{ $store.state.user.id }}</span>
     </b-card>
     <b-form-row>
       <b-col>
