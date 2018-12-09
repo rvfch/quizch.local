@@ -19,7 +19,7 @@
             <b-form-input id="titleInput" type="text" v-model="title" required placeholder="Title..."></b-form-input>
           </b-form-group>
           <b-form-group id="descriptionInputGroup" label="Description: " label-for="descriptionInput">
-            <b-form-textarea id="descriptionInput" :rows="4" :max-rows="8" v-model.trim="description" placeholder="Quiz description..." required no-resize></b-form-textarea>
+            <b-form-textarea id="descriptionInput" :rows="4" :max-rows="8" v-model="description" placeholder="Quiz description..." required no-resize></b-form-textarea>
           </b-form-group>
           <b-form-group id="timerInputGroup" label="Set timer: " label-for="timerInput">
             <b-input-group>
@@ -175,8 +175,18 @@ export default {
         }
       },
       addQuiz() {
+        this.timerHours = this.timerHours === '' ? '0' : this.timerHours
+        this.timerMinutes = this.timerMinutes === '' ? '0' : this.timerMinutes
+        this.timerSeconds = this.timerSeconds === '' ? '0' : this.timerSeconds
         const duration = parseInt(this.timerHours) * 60 * 60 + parseInt(this.timerMinutes) * 60 + parseInt(this.timerSeconds)
 
+        // deleting null answers
+        this.questions.forEach((question, qindex) => {
+          question.answers.forEach((answer, index) => {
+            if (answer.text === '')
+              this.questions[qindex].answers.splice(index, 1)
+          })
+        })
         const quiz = {
           id: '',
           title: this.title,

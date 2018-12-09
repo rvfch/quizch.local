@@ -1,7 +1,30 @@
 <template lang="html">
   <b-row class="d-flex justify-content-center align-items-center quiz-container">
     <b-col lg="10">
-      <b-card no-body v-if="previewMode" class="quiz-window" :header="quiz.title + ' PREVIEW MODE'">
+      <b-card no-body v-if="$store.state.loading" class="quiz-window">
+        <b-card-body class="d-flex flex-column justify-content-center align-items-center">
+          <h3>Loading...</h3>
+        </b-card-body>
+      </b-card>
+      <b-card no-body v-else-if="!quizStarted && quiz !== undefined" class="quiz-window">
+        <b-card-header>
+          <strong style="font-weight: 500;">{{ quiz.title }}</strong>
+        </b-card-header>
+        <b-card-body class="d-flex flex-column justify-content-start">
+          <h3>Welcome to <strong>{{ quiz.title }}</strong> quiz!</h3>
+          <p>
+            <strong>You have only {{ time }} to do this quiz.</strong>
+          </p>
+          <p>
+            So, good luck and have fun!
+          </p>
+          <b-button variant="success" class="w-100" @click="startQuiz(); time = ''">PRESS BUTTON TO START QUIZ</b-button>
+        </b-card-body>
+      </b-card>
+      <b-card no-body v-else-if="previewMode" class="quiz-window">
+        <b-card-header>
+          <strong style="font-weight: 500;">{{ quiz.title }}</strong>
+        </b-card-header>
         <b-card-body class="d-flex flex-column justify-content-between">
 
         </b-card-body>
@@ -14,11 +37,21 @@
         <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz not found</b-alert>
         <b-button variant="outline-primary" class="w-100 mt-3" @click="$router.push('/')">Click to go back</b-button>
       </b-card>
-      <b-card no-body v-else class="quiz-window" :header="quiz.title">
+      <b-card no-body v-else class="quiz-window">
+      <b-card-header>
+        <strong style="font-weight: 500;">{{ quiz.title }}</strong>
+      </b-card-header>
       <b-card-body class="d-flex flex-column justify-content-between" v-if="!quizEnded">
+        <div>
+        <div class="timer">
+          {{ time }}
+        </div>
+        <strong style="font-weight: 500;">Question #{{ questionNumber + 1 }}</strong>
         <p style="font-size: 18px;">
+
           {{ quiz.questions[questionNumber].question_text }}
         </p>
+        </div>
         <div class="quiz-answers">
           <b-btn v-for="answer in quiz.questions[questionNumber].answers" :key="answer.id" @click="nextQuestion(answer.id)" variant="outline-primary" class="w-100 mb-2 text-left" size="sm">
             {{ answer.text }}
@@ -39,6 +72,7 @@
 </template>
 
 <script>
+
     export default {
       data() {
         return {
@@ -47,12 +81,21 @@
           results: [],
           result: {},
           quizEnded: false,
+          quizStarted: false,
           isPassed: false,
           ifPassed: false,
+          previewMode: false,
           dismissCountdown: 0,
           dismissSecs: 5,
-          timer: '',
-          previewMode: true
+
+          // timer
+          timer: null,
+          startTime: 0,
+          time: '',
+
+          hours: '',
+          minutes: '',
+          seconds: ''
         }
       },
       computed: {
@@ -65,10 +108,39 @@
         .then(res => {
           if (res.data === 'ALREADY_PASSED')
             this.ifPassed = true
+
+            this.startTime = this.quiz.duration
+            this.hours = Math.floor(parseInt(this.startTime / 3600))
+            this.minutes = Math.floor(parseInt(this.startTime / 60, 10)) % 60
+            this.seconds = parseInt(this.startTime % 60, 10)
+            this.time = `${this.hours} hours ${this.minutes} minutes ${this.seconds} seconds`
         })
         .catch(err => console.log(err))
+
       },
       methods: {
+        startTimer() {
+          this.timer = setInterval(() => {
+            let hours = Math.floor(parseInt(this.startTime / 3600)),
+            minutes = Math.floor(parseInt(this.startTime / 60, 10)) % 60,
+            seconds = parseInt(this.startTime % 60, 10)
+            --this.startTime
+            hours = hours < 10 ? '0' + hours : hours
+            minutes = minutes < 0 ? --minutes : minutes
+            minutes = minutes < 10 ? '0' + minutes : minutes
+            seconds = seconds < 0 ? 59 : seconds
+            seconds = seconds < 10 ? '0' + seconds : seconds
+            this.time = `${hours}:${minutes}:${seconds}`
+            if (this.startTime === 0) {
+              this.endQuiz()
+              return clearInterval(this.timer)
+            }
+          }, 1000)
+        },
+        startQuiz () {
+          this.startTimer()
+          this.quizStarted = true
+        },
         countDownChanged (dismissCountdown) {
           this.dismissCountdown = dismissCountdown
           if (this.dismissCountdown === 0)

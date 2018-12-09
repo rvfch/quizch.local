@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Axios from 'axios'
 import VueClipboard from 'vue-clipboard2'
+import VueMoment from 'vue-moment'
 
 import App from './views/App'
 import Myquizzes from './views/myquizzes'
@@ -36,6 +37,7 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 Vue.use(VueClipboard)
+Vue.use(VueMoment)
 // setup auth
 Vue.prototype.$http = Axios
 const token = localStorage.getItem('token')
