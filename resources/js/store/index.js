@@ -146,7 +146,12 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.get(`/api/quizzes/${state.user.id}`)
               .then(res => {
-                commit('GET_QUIZZES', res.data.data)
+                let quizzes = res.data.data.map((element) => {
+                  var o = Object.assign({}, element)
+                  o.toggleId = false;
+                  return o
+                })
+                commit('GET_QUIZZES', quizzes)
                 commit('LOADING', false)
                 resolve(res)
               }).catch(err => {

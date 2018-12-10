@@ -21,8 +21,22 @@
           </b-button-group>
           </template>
 
+          <template slot="hash" slot-scope="row">
+            <a v-if="!row.item.toggleId" href="#" @click="row.item.toggleId = true">[Click to show]</a>
+            <span v-if="row.item.toggleId">{{ row.item.hash }}</span>
+          </template>
+
+          <template slot="users" slot-scope="row">
+            <a href="#" :id="row.item.id + 'users'">{{ row.item.users }}</a>
+            <b-tooltip :target="row.item.id + 'users'" placement="top">
+              Click to show detailed info
+            </b-tooltip>
+          </template>
           <template slot="title" slot-scope="row">
-            <a href="#"><strong>{{ row.item.title }}</strong></a>
+            <a href="#" :id="row.item.title + 'quiz'"><strong>{{ row.item.title }}</strong></a>
+            <b-tooltip :target="row.item.title + 'quiz'" placement="top">
+              Click to show more info
+            </b-tooltip>
           </template>
 
           <template slot="row-details" slot-scope="row">
@@ -54,9 +68,8 @@ export default {
                 label: 'Title',
               },
               {
-                key: 'description',
-                label: 'Description',
-
+                key: 'hash',
+                label: 'Quiz ID',
               },
               {
                 key: 'created_at',
@@ -70,7 +83,7 @@ export default {
                 key: 'options',
                 label: 'Options',
               }
-            ]
+            ],
         }
     },
     computed: {
@@ -80,6 +93,10 @@ export default {
     },
     mounted() {
         this.$store.dispatch('getquizzes')
+        .then(res => {
+
+        })
+        .catch(err => console.log(err))
     },
     methods: {
       copyURL() {

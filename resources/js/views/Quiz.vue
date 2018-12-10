@@ -6,6 +6,17 @@
           <h3>Loading...</h3>
         </b-card-body>
       </b-card>
+      <b-card no-body v-else-if="$route.params.id === 'join' && !quizLoaded && !errorLoading" class="quiz-window">
+        <b-card-body class="d-flex flex-column justify-content-start">
+          <form>
+            <h3>To join quiz enter the quiz ID: </h3>
+            <b-form-group id="quizIdInputGroup" label="Enter quiz ID: " label-for="quizIdInput">
+              <b-form-input id="quizIdInput" type="text" v-model.trim="quizId" required placeholder="Quiz ID..."></b-form-input>
+            </b-form-group>
+            <b-button variant="outline-success" class="w-100" @click="joinQuiz()">Join quiz</b-button>
+          </form>
+        </b-card-body>
+      </b-card>
       <b-card no-body v-else-if="!quizStarted && quiz !== undefined" class="quiz-window">
         <b-card-header>
           <strong style="font-weight: 500;">{{ quiz.title }}</strong>
@@ -13,12 +24,29 @@
         <b-card-body class="d-flex flex-column justify-content-start">
           <h3>Welcome to <strong>{{ quiz.title }}</strong> quiz!</h3>
           <p>
+            <strong>Description: </strong>{{ quiz.description }}
+          </p>
+          <p>
             <strong>You have only {{ time }} to do this quiz.</strong>
           </p>
           <p>
             So, good luck and have fun!
           </p>
-          <b-button variant="success" class="w-100" @click="startQuiz(); time = ''">PRESS BUTTON TO START QUIZ</b-button>
+          <b-alert :show="errorWrongPassword" variant="danger">
+            <strong>Error! </strong>Incorrect password.
+          </b-alert>
+          <b-alert :show="quiz.private && quiz.password === ''" variant="danger">
+            <strong>This quiz was disabled by creator! You can't pass it.</strong>
+          </b-alert>
+          <div v-if="quiz.private">
+          <b-form-group id="passwordInputGroup" label="Enter password: " label-for="passwordInput">
+            <b-form-input id="passwordInput" type="text" v-model.trim="quizPassword" required placeholder="Password..."></b-form-input>
+          </b-form-group>
+          <b-button :disabled="quizPassword === '' || quiz.password === ''" variant="outline-success" class="w-100" @click="startQuiz(); time = ''">START QUIZ</b-button>
+          </div>
+          <div v-else>
+            <b-button variant="outline-success" class="w-100" @click="startQuiz(); time = ''">START QUIZ</b-button>
+          </div>
         </b-card-body>
       </b-card>
       <b-card no-body v-else-if="previewMode" class="quiz-window">
@@ -33,7 +61,7 @@
         <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz already passed</b-alert>
         <b-button variant="outline-primary" class="w-100 mt-3" @click="$router.push('/')">Click to go back</b-button>
       </b-card>
-      <b-card v-else-if="quiz === undefined" class="quiz-window">
+      <b-card v-else-if="errorLoading" class="quiz-window">
         <b-alert show variant="danger" class="mb-0 w-100 text-center">Quiz not found</b-alert>
         <b-button variant="outline-primary" class="w-100 mt-3" @click="$router.push('/')">Click to go back</b-button>
       </b-card>
@@ -88,6 +116,12 @@
           dismissCountdown: 0,
           dismissSecs: 5,
 
+          quizId: '',
+          quizPassword: '',
+          quizLoaded: false,
+          errorLoading: false,
+          errorWrongPassword: false,
+
           // timer
           timer: null,
           startTime: 0,
@@ -104,21 +138,36 @@
         }
       },
       mounted() {
-        this.$store.dispatch('getquiz', this.$route.params.id)
-        .then(res => {
-          if (res.data === 'ALREADY_PASSED')
-            this.ifPassed = true
-
-            this.startTime = this.quiz.duration
-            this.hours = Math.floor(parseInt(this.startTime / 3600))
-            this.minutes = Math.floor(parseInt(this.startTime / 60, 10)) % 60
-            this.seconds = parseInt(this.startTime % 60, 10)
-            this.time = `${this.hours} hours ${this.minutes} minutes ${this.seconds} seconds`
-        })
-        .catch(err => console.log(err))
-
+        if (this.$route.params.id !== 'join')
+          this.loadQuiz(this.$route.params.id)
       },
       methods: {
+        joinQuiz() {
+          this.loadQuiz(this.quizId)
+        },
+        prepareQuiz() {
+          this.startTime = this.quiz.duration
+          this.hours = Math.floor(parseInt(this.startTime / 3600))
+          this.minutes = Math.floor(parseInt(this.startTime / 60, 10)) % 60
+          this.seconds = parseInt(this.startTime % 60, 10)
+          this.time = `${this.hours} hours ${this.minutes} minutes ${this.seconds} seconds`
+          this.quizLoaded = true
+        },
+        loadQuiz(quizId) {
+          this.$store.dispatch('getquiz', quizId)
+          .then(res => {
+            if (res.data === 'ALREADY_PASSED') {
+              this.ifPassed = true
+              throw 'ALREADY_PASSED'
+            }
+            this.prepareQuiz()
+          })
+          .catch(err => {
+              this.$store.state.loading = false
+              console.log(err)
+              this.errorLoading = true
+          })
+        },
         startTimer() {
           this.timer = setInterval(() => {
             let hours = Math.floor(parseInt(this.startTime / 3600)),
@@ -138,8 +187,18 @@
           }, 1000)
         },
         startQuiz () {
-          this.startTimer()
-          this.quizStarted = true
+          if (this.quiz.private === 1) {
+            if (this.quizPassword === this.quiz.password) {
+              this.startTimer()
+              this.quizStarted = true
+            } else {
+              this.errorWrongPassword = true
+              throw 'WRONG_PASSWORD'
+            }
+          } else {
+            this.startTimer()
+            this.quizStarted = true
+          }
         },
         countDownChanged (dismissCountdown) {
           this.dismissCountdown = dismissCountdown
