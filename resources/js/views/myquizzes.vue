@@ -17,7 +17,7 @@
             <b-button-group size="sm">
             <b-button v-if="row.item.private === 0" size="sm" variant="outline-danger" @click="row.item.private = 1; update(row.item.id, row.item)"><font-awesome-icon :icon="['fas', 'lock-open']"></font-awesome-icon></b-button>
             <b-button v-else variant="outline-success" size="sm" @click="row.item.private = 0; update(row.item.id, row.item)"><font-awesome-icon :icon="['fas', 'lock']"></font-awesome-icon></b-button>
-            <b-button size="sm" variant="outline-info"><font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon></b-button>
+            <b-button size="sm" variant="outline-info" @click="$router.push({name: 'quiz', params: { id: row.item.hash, previewMode: true }})"><font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon></b-button>
           </b-button-group>
           </template>
 

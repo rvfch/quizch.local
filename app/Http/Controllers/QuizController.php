@@ -88,7 +88,7 @@ class QuizController extends Controller
         $result = Result::select('user_id')->where('quiz_id', $quiz->id)->first();
         $checkRes = $result ? true : false;
         if($checkRes) {
-          if($result->user_id == auth()->id())
+          if($result->user_id == auth()->id() && $quiz->user_id != auth()->id())
             return response()->json('ALREADY_PASSED');
         }
         return new QuizResource($quiz);

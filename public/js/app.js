@@ -76036,7 +76036,20 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "b-button",
-                            { attrs: { size: "sm", variant: "outline-info" } },
+                            {
+                              attrs: { size: "sm", variant: "outline-info" },
+                              on: {
+                                click: function($event) {
+                                  _vm.$router.push({
+                                    name: "quiz",
+                                    params: {
+                                      id: row.item.hash,
+                                      previewMode: true
+                                    }
+                                  })
+                                }
+                              }
+                            },
                             [
                               _c("font-awesome-icon", {
                                 attrs: { icon: ["fas", "eye"] }
@@ -77812,6 +77825,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -77825,7 +77855,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       quizStarted: false,
       isPassed: false,
       ifPassed: false,
-      previewMode: false,
       dismissCountdown: 0,
       dismissSecs: 5,
 
@@ -77842,7 +77871,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       hours: '',
       minutes: '',
-      seconds: ''
+      seconds: '',
+
+      previewEnded: false
     };
   },
 
@@ -77873,9 +77904,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.$store.dispatch('getquiz', quizId).then(function (res) {
         if (res.data === 'ALREADY_PASSED') {
           _this.ifPassed = true;
-          throw 'ALREADY_PASSED';
+        } else {
+          _this.prepareQuiz();
         }
-        _this.prepareQuiz();
       }).catch(function (err) {
         _this.$store.state.loading = false;
         console.log(err);
@@ -77902,6 +77933,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
       }, 1000);
     },
+    setTimer: function setTimer() {
+      var hours = this.hours,
+          minutes = this.minutes,
+          seconds = this.seconds;
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+      this.time = hours + ':' + minutes + ':' + seconds;
+    },
     startQuiz: function startQuiz() {
       if (this.quiz.private === 1) {
         if (this.quizPassword === this.quiz.password) {
@@ -77920,14 +77960,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.dismissCountdown = dismissCountdown;
       if (this.dismissCountdown === 0) this.$router.push({ name: 'My results' });
     },
-    nextQuestion: function nextQuestion(answerId) {
+    nextQuestion: function nextQuestion() {
+      var answerId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
       if (this.questionNumber !== this.quiz.questions_count - 1) {
         this.questionNumber++;
-        this.results.push(answerId);
-      } else {
+        if (!this.$route.params.previewMode) this.results.push(answerId);
+      } else if (!this.$route.params.previewMode) {
         this.results.push(answerId);
         this.endQuiz();
+      } else {
+        this.endPreview();
       }
+    },
+    endPreview: function endPreview() {
+      this.previewEnded = true;
     },
     endQuiz: function endQuiz() {
       this.quizEnded = true;
@@ -78062,7 +78109,7 @@ var render = function() {
                   ],
                   1
                 )
-              : !_vm.quizStarted && _vm.quiz !== undefined
+              : _vm.$route.params.previewMode
                 ? _c(
                     "b-card",
                     { staticClass: "quiz-window", attrs: { "no-body": "" } },
@@ -78071,161 +78118,143 @@ var render = function() {
                         _c(
                           "strong",
                           { staticStyle: { "font-weight": "500" } },
-                          [_vm._v(_vm._s(_vm.quiz.title))]
+                          [_vm._v(_vm._s(_vm.quiz.title) + " [PREVIEW MODE]")]
                         )
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "b-card-body",
-                        {
-                          staticClass:
-                            "d-flex flex-column justify-content-start"
-                        },
-                        [
-                          _c("h3", [
-                            _vm._v("Welcome to "),
-                            _c("strong", [_vm._v(_vm._s(_vm.quiz.title))]),
-                            _vm._v(" quiz!")
-                          ]),
-                          _vm._v(" "),
-                          _c("p", [
-                            _c("strong", [_vm._v("Description: ")]),
-                            _vm._v(_vm._s(_vm.quiz.description) + "\n        ")
-                          ]),
-                          _vm._v(" "),
-                          _c("p", [
-                            _c("strong", [
-                              _vm._v(
-                                "You have only " +
-                                  _vm._s(_vm.time) +
-                                  " to do this quiz."
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "\n          So, good luck and have fun!\n        "
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "b-alert",
+                      _vm.previewEnded
+                        ? _c(
+                            "b-card-body",
                             {
-                              attrs: {
-                                show: _vm.errorWrongPassword,
-                                variant: "danger"
-                              }
+                              staticClass:
+                                "d-flex flex-column justify-content-between"
                             },
                             [
-                              _c("strong", [_vm._v("Error! ")]),
-                              _vm._v("Incorrect password.\n        ")
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "b-alert",
-                            {
-                              attrs: {
-                                show:
-                                  _vm.quiz.private && _vm.quiz.password === "",
-                                variant: "danger"
-                              }
-                            },
-                            [
-                              _c("strong", [
-                                _vm._v(
-                                  "This quiz was disabled by creator! You can't pass it."
-                                )
-                              ])
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _vm.quiz.private
-                            ? _c(
+                              _c("h3", [_vm._v("Preview ended")]),
+                              _vm._v(" "),
+                              _c(
                                 "div",
                                 [
                                   _c(
-                                    "b-form-group",
+                                    "b-btn",
                                     {
-                                      attrs: {
-                                        id: "passwordInputGroup",
-                                        label: "Enter password: ",
-                                        "label-for": "passwordInput"
+                                      staticClass: "w-100 mb-3",
+                                      attrs: { variant: "success" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.previewEnded = false
+                                          _vm.questionNumber = 0
+                                        }
                                       }
                                     },
-                                    [
-                                      _c("b-form-input", {
-                                        attrs: {
-                                          id: "passwordInput",
-                                          type: "text",
-                                          required: "",
-                                          placeholder: "Password..."
-                                        },
-                                        model: {
-                                          value: _vm.quizPassword,
-                                          callback: function($$v) {
-                                            _vm.quizPassword =
-                                              typeof $$v === "string"
-                                                ? $$v.trim()
-                                                : $$v
-                                          },
-                                          expression: "quizPassword"
-                                        }
-                                      })
-                                    ],
-                                    1
+                                    [_vm._v("Show again")]
                                   ),
                                   _vm._v(" "),
                                   _c(
-                                    "b-button",
+                                    "b-btn",
                                     {
                                       staticClass: "w-100",
-                                      attrs: {
-                                        disabled:
-                                          _vm.quizPassword === "" ||
-                                          _vm.quiz.password === "",
-                                        variant: "outline-success"
-                                      },
+                                      attrs: { variant: "primary" },
                                       on: {
                                         click: function($event) {
-                                          _vm.startQuiz()
-                                          _vm.time = ""
+                                          _vm.$router.push("/")
                                         }
                                       }
                                     },
-                                    [_vm._v("START QUIZ")]
+                                    [_vm._v("Go Back")]
                                   )
                                 ],
                                 1
                               )
-                            : _c(
+                            ]
+                          )
+                        : _c(
+                            "b-card-body",
+                            {
+                              staticClass:
+                                "d-flex flex-column justify-content-between"
+                            },
+                            [
+                              _c("div", [
+                                _c(
+                                  "strong",
+                                  { staticStyle: { "font-weight": "500" } },
+                                  [
+                                    _vm._v(
+                                      "Question #" +
+                                        _vm._s(_vm.questionNumber + 1)
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "p",
+                                  { staticStyle: { "font-size": "18px" } },
+                                  [
+                                    _vm._v(
+                                      "\n\n          " +
+                                        _vm._s(
+                                          _vm.quiz.questions[_vm.questionNumber]
+                                            .question_text
+                                        ) +
+                                        "\n        "
+                                    )
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
                                 "div",
+                                { staticClass: "quiz-answers" },
                                 [
+                                  _vm._l(
+                                    _vm.quiz.questions[_vm.questionNumber]
+                                      .answers,
+                                    function(answer) {
+                                      return _c(
+                                        "b-btn",
+                                        {
+                                          key: answer.id,
+                                          staticClass: "w-100 mb-2 text-left",
+                                          attrs: {
+                                            disabled: "",
+                                            variant: "outline-primary",
+                                            size: "sm"
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n            " +
+                                              _vm._s(answer.text) +
+                                              "\n          "
+                                          )
+                                        ]
+                                      )
+                                    }
+                                  ),
+                                  _vm._v(" "),
                                   _c(
-                                    "b-button",
+                                    "b-btn",
                                     {
                                       staticClass: "w-100",
                                       attrs: { variant: "outline-success" },
                                       on: {
                                         click: function($event) {
-                                          _vm.startQuiz()
-                                          _vm.time = ""
+                                          _vm.nextQuestion()
                                         }
                                       }
                                     },
-                                    [_vm._v("START QUIZ")]
+                                    [_vm._v("NEXT QUESTION")]
                                   )
                                 ],
-                                1
+                                2
                               )
-                        ],
-                        1
-                      )
+                            ]
+                          )
                     ],
                     1
                   )
-                : _vm.previewMode
+                : !_vm.quizStarted && _vm.quiz !== undefined
                   ? _c(
                       "b-card",
                       { staticClass: "quiz-window", attrs: { "no-body": "" } },
@@ -78238,10 +78267,156 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _c("b-card-body", {
-                          staticClass:
-                            "d-flex flex-column justify-content-between"
-                        })
+                        _c(
+                          "b-card-body",
+                          {
+                            staticClass:
+                              "d-flex flex-column justify-content-start"
+                          },
+                          [
+                            _c("h3", [
+                              _vm._v("Welcome to "),
+                              _c("strong", [_vm._v(_vm._s(_vm.quiz.title))]),
+                              _vm._v(" quiz!")
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _c("strong", [_vm._v("Description: ")]),
+                              _vm._v(
+                                _vm._s(_vm.quiz.description) + "\n        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _c("strong", [
+                                _vm._v(
+                                  "You have only " +
+                                    _vm._s(_vm.time) +
+                                    " to do this quiz."
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v(
+                                "\n          So, good luck and have fun!\n        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "b-alert",
+                              {
+                                attrs: {
+                                  show: _vm.errorWrongPassword,
+                                  variant: "danger"
+                                }
+                              },
+                              [
+                                _c("strong", [_vm._v("Error! ")]),
+                                _vm._v("Incorrect password.\n        ")
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-alert",
+                              {
+                                attrs: {
+                                  show:
+                                    _vm.quiz.private &&
+                                    _vm.quiz.password === "",
+                                  variant: "danger"
+                                }
+                              },
+                              [
+                                _c("strong", [
+                                  _vm._v(
+                                    "This quiz was disabled by creator! You can't pass it."
+                                  )
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm.quiz.private
+                              ? _c(
+                                  "div",
+                                  [
+                                    _c(
+                                      "b-form-group",
+                                      {
+                                        attrs: {
+                                          id: "passwordInputGroup",
+                                          label: "Enter password: ",
+                                          "label-for": "passwordInput"
+                                        }
+                                      },
+                                      [
+                                        _c("b-form-input", {
+                                          attrs: {
+                                            id: "passwordInput",
+                                            type: "text",
+                                            required: "",
+                                            placeholder: "Password..."
+                                          },
+                                          model: {
+                                            value: _vm.quizPassword,
+                                            callback: function($$v) {
+                                              _vm.quizPassword =
+                                                typeof $$v === "string"
+                                                  ? $$v.trim()
+                                                  : $$v
+                                            },
+                                            expression: "quizPassword"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "b-button",
+                                      {
+                                        staticClass: "w-100",
+                                        attrs: {
+                                          disabled:
+                                            _vm.quizPassword === "" ||
+                                            _vm.quiz.password === "",
+                                          variant: "outline-success"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.startQuiz()
+                                            _vm.setTimer()
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("START QUIZ")]
+                                    )
+                                  ],
+                                  1
+                                )
+                              : _c(
+                                  "div",
+                                  [
+                                    _c(
+                                      "b-button",
+                                      {
+                                        staticClass: "w-100",
+                                        attrs: { variant: "outline-success" },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.startQuiz()
+                                            _vm.setTimer()
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("START QUIZ")]
+                                    )
+                                  ],
+                                  1
+                                )
+                          ],
+                          1
+                        )
                       ],
                       1
                     )
@@ -78312,13 +78487,31 @@ var render = function() {
                             attrs: { "no-body": "" }
                           },
                           [
-                            _c("b-card-header", [
-                              _c(
-                                "strong",
-                                { staticStyle: { "font-weight": "500" } },
-                                [_vm._v(_vm._s(_vm.quiz.title))]
-                              )
-                            ]),
+                            _c(
+                              "b-card-header",
+                              {
+                                staticClass:
+                                  "w-100 d-flex justify-content-between align-items-center"
+                              },
+                              [
+                                _c(
+                                  "strong",
+                                  { staticStyle: { "font-weight": "500" } },
+                                  [_vm._v(_vm._s(_vm.quiz.title))]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "h4",
+                                  {
+                                    staticStyle: {
+                                      padding: "0 !important",
+                                      margin: "0 !important"
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(_vm.time))]
+                                )
+                              ]
+                            ),
                             _vm._v(" "),
                             !_vm.quizEnded
                               ? _c(
@@ -78329,14 +78522,6 @@ var render = function() {
                                   },
                                   [
                                     _c("div", [
-                                      _c("div", { staticClass: "timer" }, [
-                                        _vm._v(
-                                          "\n        " +
-                                            _vm._s(_vm.time) +
-                                            "\n      "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
                                       _c(
                                         "strong",
                                         {

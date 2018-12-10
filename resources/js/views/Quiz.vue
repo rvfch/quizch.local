@@ -17,6 +17,33 @@
           </form>
         </b-card-body>
       </b-card>
+      <b-card no-body v-else-if="$route.params.previewMode" class="quiz-window">
+        <b-card-header>
+          <strong style="font-weight: 500;">{{ quiz.title }} [PREVIEW MODE]</strong>
+        </b-card-header>
+        <b-card-body v-if="previewEnded" class="d-flex flex-column justify-content-between">
+          <h3>Preview ended</h3>
+          <div>
+            <b-btn variant="success" class="w-100 mb-3" @click="previewEnded = false; questionNumber = 0">Show again</b-btn>
+            <b-btn variant="primary" class="w-100" @click="$router.push('/')">Go Back</b-btn>
+          </div>
+        </b-card-body>
+        <b-card-body v-else class="d-flex flex-column justify-content-between">
+          <div>
+          <strong style="font-weight: 500;">Question #{{ questionNumber + 1 }}</strong>
+          <p style="font-size: 18px;">
+
+            {{ quiz.questions[questionNumber].question_text }}
+          </p>
+          </div>
+          <div class="quiz-answers">
+            <b-btn v-for="answer in quiz.questions[questionNumber].answers" :key="answer.id" disabled variant="outline-primary" class="w-100 mb-2 text-left" size="sm">
+              {{ answer.text }}
+            </b-btn>
+            <b-btn variant="outline-success" class="w-100" @click="nextQuestion()">NEXT QUESTION</b-btn>
+          </div>
+        </b-card-body>
+      </b-card>
       <b-card no-body v-else-if="!quizStarted && quiz !== undefined" class="quiz-window">
         <b-card-header>
           <strong style="font-weight: 500;">{{ quiz.title }}</strong>
@@ -42,19 +69,11 @@
           <b-form-group id="passwordInputGroup" label="Enter password: " label-for="passwordInput">
             <b-form-input id="passwordInput" type="text" v-model.trim="quizPassword" required placeholder="Password..."></b-form-input>
           </b-form-group>
-          <b-button :disabled="quizPassword === '' || quiz.password === ''" variant="outline-success" class="w-100" @click="startQuiz(); time = ''">START QUIZ</b-button>
+          <b-button :disabled="quizPassword === '' || quiz.password === ''" variant="outline-success" class="w-100" @click="startQuiz(); setTimer()">START QUIZ</b-button>
           </div>
           <div v-else>
-            <b-button variant="outline-success" class="w-100" @click="startQuiz(); time = ''">START QUIZ</b-button>
+            <b-button variant="outline-success" class="w-100" @click="startQuiz(); setTimer()">START QUIZ</b-button>
           </div>
-        </b-card-body>
-      </b-card>
-      <b-card no-body v-else-if="previewMode" class="quiz-window">
-        <b-card-header>
-          <strong style="font-weight: 500;">{{ quiz.title }}</strong>
-        </b-card-header>
-        <b-card-body class="d-flex flex-column justify-content-between">
-
         </b-card-body>
       </b-card>
       <b-card v-else-if="ifPassed" class="quiz-window">
@@ -66,14 +85,12 @@
         <b-button variant="outline-primary" class="w-100 mt-3" @click="$router.push('/')">Click to go back</b-button>
       </b-card>
       <b-card no-body v-else class="quiz-window">
-      <b-card-header>
+      <b-card-header class="w-100 d-flex justify-content-between align-items-center">
         <strong style="font-weight: 500;">{{ quiz.title }}</strong>
+          <h4 style="padding: 0 !important; margin: 0 !important;">{{ time }}</h4>
       </b-card-header>
       <b-card-body class="d-flex flex-column justify-content-between" v-if="!quizEnded">
         <div>
-        <div class="timer">
-          {{ time }}
-        </div>
         <strong style="font-weight: 500;">Question #{{ questionNumber + 1 }}</strong>
         <p style="font-size: 18px;">
 
@@ -112,7 +129,6 @@
           quizStarted: false,
           isPassed: false,
           ifPassed: false,
-          previewMode: false,
           dismissCountdown: 0,
           dismissSecs: 5,
 
@@ -129,7 +145,9 @@
 
           hours: '',
           minutes: '',
-          seconds: ''
+          seconds: '',
+
+          previewEnded: false
         }
       },
       computed: {
@@ -158,9 +176,9 @@
           .then(res => {
             if (res.data === 'ALREADY_PASSED') {
               this.ifPassed = true
-              throw 'ALREADY_PASSED'
-            }
+            } else {
             this.prepareQuiz()
+          }
           })
           .catch(err => {
               this.$store.state.loading = false
@@ -186,6 +204,15 @@
             }
           }, 1000)
         },
+        setTimer() {
+          let hours = this.hours,
+              minutes = this.minutes,
+              seconds = this.seconds
+          hours = hours < 10 ? '0' + hours : hours
+          minutes = minutes < 10 ? '0' + minutes : minutes
+          seconds = seconds < 10 ? '0' + seconds : seconds
+          this.time = `${hours}:${minutes}:${seconds}`
+        },
         startQuiz () {
           if (this.quiz.private === 1) {
             if (this.quizPassword === this.quiz.password) {
@@ -205,15 +232,21 @@
           if (this.dismissCountdown === 0)
             this.$router.push({ name: 'My results' })
         },
-        nextQuestion(answerId) {
+        nextQuestion(answerId = 0) {
           if(this.questionNumber !== this.quiz.questions_count - 1) {
             this.questionNumber++
-            this.results.push(answerId)
+            if (!this.$route.params.previewMode)
+              this.results.push(answerId)
           }
-          else {
+          else if(!this.$route.params.previewMode) {
             this.results.push(answerId)
             this.endQuiz()
+          } else {
+            this.endPreview()
           }
+        },
+        endPreview() {
+          this.previewEnded = true
         },
         endQuiz() {
           this.quizEnded = true
