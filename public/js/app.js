@@ -76295,7 +76295,7 @@ exports = module.exports = __webpack_require__(6)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -76306,6 +76306,11 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
 //
 //
 //
@@ -76341,7 +76346,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     getResults: function getResults() {
-      this.$store.dispatch('getresults');
+      this.$store.dispatch('getresults').then(function (res) {}).catch(function (err) {
+        return console.log(err);
+      });
     }
   }
 });
@@ -76375,21 +76382,43 @@ var render = function() {
                       "b-card",
                       {
                         key: index,
-                        staticClass: "text-center",
+                        staticClass: "text-center pt-0",
                         staticStyle: { "max-width": "17.5rem" },
                         attrs: {
-                          "bg-variant": "success",
+                          "bg-variant": result.resultColor,
                           "text-variant": "white"
                         }
                       },
                       [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "d-flex justify-content-center flex-column align-items-center mb-2 mt-0 pt-0"
+                          },
+                          [
+                            _c("strong", [_vm._v(_vm._s(result.quiz_title))]),
+                            _vm._v(" "),
+                            _c("span", [_vm._v(_vm._s(result.created_at))])
+                          ]
+                        ),
+                        _vm._v(" "),
                         _c("b-progress", {
                           attrs: {
                             value: result.right_answers,
-                            max: result.right_answers,
-                            "show-progress": ""
+                            max: result.questions_count,
+                            "show-value": ""
                           }
-                        })
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "b-btn",
+                          {
+                            staticClass: "w-100 mt-3",
+                            attrs: { variant: "success", size: "sm" }
+                          },
+                          [_vm._v("Detailed info...")]
+                        )
                       ],
                       1
                     )

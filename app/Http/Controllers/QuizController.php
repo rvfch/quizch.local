@@ -52,7 +52,7 @@ class QuizController extends Controller
         $quiz->isPrivate = $request->input('private');
         $quiz->password = $request->input('password') != '' ? Hash::make($request->input('password')) : '';
         $quiz->duration = $request->input('duration');
-        $quiz->hash = md5(Hash::make($quiz->id));
+        $quiz->hash = $quiz->hash != '' ? $quiz->hash : md5(Hash::make($quiz->id));
 
         $quiz->save();
 

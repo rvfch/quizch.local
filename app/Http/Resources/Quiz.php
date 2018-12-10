@@ -40,7 +40,7 @@ class Quiz extends JsonResource
     public function with($request)
     {
         return [
-            'version' => '1.2',
+            'version' => '1.3',
             'author' => 'Roman "rvfch" Filatov',
             'author_url' => url('http://rvfch.github.io')
         ];
