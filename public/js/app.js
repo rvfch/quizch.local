@@ -34497,6 +34497,9 @@ var router = new __WEBPACK_IMPORTED_MODULE_2_vue_router__["a" /* default */]({
     meta: {
       requiresAuth: true
     }
+  }, {
+    path: '*',
+    component: __WEBPACK_IMPORTED_MODULE_17__views_NotFoundRoute___default.a
   }]
 });
 
@@ -78270,7 +78273,10 @@ var render = function() {
                                           staticClass: "w-100 mb-2 text-left",
                                           attrs: {
                                             disabled: "",
-                                            variant: "outline-primary",
+                                            variant:
+                                              answer.correct === 1
+                                                ? "success"
+                                                : "outline-primary",
                                             size: "sm"
                                           }
                                         },

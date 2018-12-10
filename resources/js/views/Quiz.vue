@@ -38,7 +38,7 @@
           </p>
           </div>
           <div class="quiz-answers">
-            <b-btn v-for="answer in quiz.questions[questionNumber].answers" :key="answer.id" disabled variant="outline-primary" class="w-100 mb-2 text-left" size="sm">
+            <b-btn v-for="answer in quiz.questions[questionNumber].answers" :key="answer.id" disabled :variant="answer.correct === 1 ? 'success' : 'outline-primary'" class="w-100 mb-2 text-left" size="sm">
               {{ answer.text }}
             </b-btn>
             <b-btn variant="outline-success" class="w-100" @click="nextQuestion()">NEXT QUESTION</b-btn>

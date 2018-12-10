@@ -19,7 +19,7 @@ import Stats from './views/stats'
 import Newquiz from './views/newquiz'
 import Quiz from './views/quiz'
 import Auth from './views/auth/auth'
-import NewFoundRoute from './views/NotFoundRoute'
+import NotFoundRoute from './views/NotFoundRoute'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faBell, faLink, faEye, faPlusCircle, faCopy, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
@@ -104,6 +104,10 @@ const router = new VueRouter({
         requiresAuth: true
       }
     },
+    {
+      path: '*',
+      component: NotFoundRoute,
+    }
   ],
 })
 
