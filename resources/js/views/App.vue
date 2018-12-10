@@ -23,9 +23,7 @@
       <b-row no-gutters>
         <b-col tag="nav" md="2" sm="3" class="d-none d-md-flex flex-column pt-3 sidebar">
           <div class="top-sidebar d-lg-flex d-none">
-            <span>
-              Hello, {{ $store.state.user.name }}
-            </span>
+            <b-btn variant="outline-dark" @click="$router.push('/quiz/join')">JOIN QUIZ</b-btn>
             <div>
             <a href="#"><font-awesome-icon :icon="['fas', 'bell']"></font-awesome-icon></a>
             <a href="#"><font-awesome-icon :icon="['fas', 'envelope']"></font-awesome-icon></a>

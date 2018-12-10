@@ -13,7 +13,7 @@
               <span>{{ result.created_at }}</span>
             </div>
             <b-progress :value="result.right_answers" :max="result.questions_count" show-value></b-progress>
-            <b-btn variant="success" class="w-100 mt-3" size="sm">Detailed info...</b-btn>
+            <b-btn variant="dark" class="w-100 mt-3" size="sm">Detailed info...</b-btn>
           </b-card>
         </b-card-group>
     </div>

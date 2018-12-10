@@ -13,7 +13,8 @@
             <b-form-group id="quizIdInputGroup" label="Enter quiz ID: " label-for="quizIdInput">
               <b-form-input id="quizIdInput" type="text" v-model.trim="quizId" required placeholder="Quiz ID..."></b-form-input>
             </b-form-group>
-            <b-button variant="outline-success" class="w-100" @click="joinQuiz()">Join quiz</b-button>
+            <b-button variant="success" class="w-100 mb-3" @click="joinQuiz()">Join quiz</b-button>
+            <b-button variant="primary" class="w-100" @click="$router.push('/')">Go Back</b-button>
           </form>
         </b-card-body>
       </b-card>

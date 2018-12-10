@@ -75306,8 +75306,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -75479,39 +75477,49 @@ var render = function() {
                   attrs: { tag: "nav", md: "2", sm: "3" }
                 },
                 [
-                  _c("div", { staticClass: "top-sidebar d-lg-flex d-none" }, [
-                    _c("span", [
-                      _vm._v(
-                        "\n            Hello, " +
-                          _vm._s(_vm.$store.state.user.name) +
-                          "\n          "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", [
+                  _c(
+                    "div",
+                    { staticClass: "top-sidebar d-lg-flex d-none" },
+                    [
                       _c(
-                        "a",
-                        { attrs: { href: "#" } },
-                        [
-                          _c("font-awesome-icon", {
-                            attrs: { icon: ["fas", "bell"] }
-                          })
-                        ],
-                        1
+                        "b-btn",
+                        {
+                          attrs: { variant: "outline-dark" },
+                          on: {
+                            click: function($event) {
+                              _vm.$router.push("/quiz/join")
+                            }
+                          }
+                        },
+                        [_vm._v("JOIN QUIZ")]
                       ),
                       _vm._v(" "),
-                      _c(
-                        "a",
-                        { attrs: { href: "#" } },
-                        [
-                          _c("font-awesome-icon", {
-                            attrs: { icon: ["fas", "envelope"] }
-                          })
-                        ],
-                        1
-                      )
-                    ])
-                  ]),
+                      _c("div", [
+                        _c(
+                          "a",
+                          { attrs: { href: "#" } },
+                          [
+                            _c("font-awesome-icon", {
+                              attrs: { icon: ["fas", "bell"] }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          { attrs: { href: "#" } },
+                          [
+                            _c("font-awesome-icon", {
+                              attrs: { icon: ["fas", "envelope"] }
+                            })
+                          ],
+                          1
+                        )
+                      ])
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
                   _c("ul", { staticClass: "side-menu" }, [
                     _c(
@@ -76415,7 +76423,7 @@ var render = function() {
                           "b-btn",
                           {
                             staticClass: "w-100 mt-3",
-                            attrs: { variant: "success", size: "sm" }
+                            attrs: { variant: "dark", size: "sm" }
                           },
                           [_vm._v("Detailed info...")]
                         )
@@ -77871,6 +77879,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -78120,8 +78129,8 @@ var render = function() {
                             _c(
                               "b-button",
                               {
-                                staticClass: "w-100",
-                                attrs: { variant: "outline-success" },
+                                staticClass: "w-100 mb-3",
+                                attrs: { variant: "success" },
                                 on: {
                                   click: function($event) {
                                     _vm.joinQuiz()
@@ -78129,6 +78138,20 @@ var render = function() {
                                 }
                               },
                               [_vm._v("Join quiz")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-button",
+                              {
+                                staticClass: "w-100",
+                                attrs: { variant: "primary" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.$router.push("/")
+                                  }
+                                }
+                              },
+                              [_vm._v("Go Back")]
                             )
                           ],
                           1
