@@ -7,7 +7,7 @@
         <b-table responsive :fields="fields" :items="quizzes" sort-desc.sync="true">
           <template slot="options" slot-scope="row">
             <b-button-group size="sm">
-              <b-button variant="warning"><font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon></b-button>
+              <b-button variant="warning" @click="$router.push({name: 'Edit quiz', params: { quiz: row.item }})"><font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon></b-button>
               <b-button variant="danger" @click="deletequiz(row.item.id)"><font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon></b-button>
               <b-button variant="secondary" @click.stop="row.toggleDetails"><font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon></b-button>
             </b-button-group>
@@ -28,15 +28,9 @@
 
           <template slot="users" slot-scope="row">
             <a href="#" :id="row.item.id + 'users'">{{ row.item.users }}</a>
-            <b-tooltip :target="row.item.id + 'users'" placement="top">
-              Click to show detailed info
-            </b-tooltip>
           </template>
           <template slot="title" slot-scope="row">
             <a href="#" :id="row.item.id + 'quiz'"><strong>{{ row.item.title }}</strong></a>
-            <b-tooltip :target="row.item.id + 'quiz'" placement="top">
-              Click to show more info
-            </b-tooltip>
           </template>
 
           <template slot="row-details" slot-scope="row">

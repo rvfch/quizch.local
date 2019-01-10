@@ -1,5 +1,5 @@
 <template lang="html">
-    <div>
+    <div v-show="$route.params.quiz.id !== null">
       <b-modal id="addQuestionModal" @ok="handleOk" :title="questionModalTitle" ref="modal">
         <form @submit.stop.prevent="handleSubmit">
           <b-form-input ref="questionText" type="text" placeholder="Enter question..." v-model="question" required></b-form-input>
@@ -42,7 +42,7 @@
           <b-btn v-else @click="private = 1" variant="outline-danger" class="w-100"><font-awesome-icon :icon="['fas', 'lock']"></font-awesome-icon></b-btn>
           </transition>
           </b-form-group>
-          <b-btn @click="handleQuiz($event)" variant="success" class="btn-block w-100 d-flex align-items-center px-0" size="md"><span class="w-25 d-flex pl-2"><font-awesome-icon :icon="['fas', 'plus-circle']"></font-awesome-icon></span><span class="w-50">CREATE QUIZ</span><span class="w-25"></span></b-btn>
+          <b-btn @click="handleQuiz($event)" variant="success" class="btn-block w-100 d-flex align-items-center px-0" size="md"><span class="w-25 d-flex pl-2"></span><span class="w-50">UPDATE QUIZ</span><span class="w-25"></span></b-btn>
           </b-col>
           <b-col>
             <label>Questions: </label>
@@ -93,9 +93,29 @@ export default {
             editableId: ''
         }
     },
+    mounted() {
+      this.title = this.$route.params.quiz.title
+      this.description = this.$route.params.quiz.description
+      this.private = this.$route.params.quiz.private === 1 ? true : false
+      this.questions = this.$route.params.quiz.questions
+      this.hhmmss(this.$route.params.quiz.duration)
+    },
     methods: {
+      pad(num) {
+          return ("0"+num).slice(-2)
+      },
+      hhmmss(secs) {
+        var minutes = Math.floor(secs / 60)
+        secs = secs%60
+        var hours = Math.floor(minutes/60)
+        minutes = minutes%60
+        this.timerHours = hours
+        this.timerMinutes = minutes
+        this.timerSeconds = secs
+      },
       questionModalShown(index, edit = false) {
         if(edit) {
+          this.clearAddQuestionForm()
           this.editQuestion(index)
           this.questionModalTitle = 'Edit question'
           this.edit = true
@@ -196,20 +216,25 @@ export default {
           })
         })
         const quiz = {
-          id: '',
+          id: this.$route.params.quiz.id,
           title: this.title,
           description: this.description,
           questions_count: this.questions.length,
           private: this.private,
           password: this.password || '',
           questions: this.questions,
-          duration: duration
+          duration: duration,
+          user_id: this.$store.state.user.id
         }
-        this.$store.dispatch('addquiz', quiz)
+        this.$store.dispatch('deletequiz', this.$route.params.quiz.id)
         .then(res => {
-          alert('Quiz successfully added :)')
-          this.$router.push('/')
+          this.$store.dispatch('addquiz', quiz)
+          .then(res => {
+            alert('Quiz successfully updated :)')
+            this.$router.push('/')
+          })
         })
+
         .catch(err => {
           console.log(err)
           console.log(quiz)

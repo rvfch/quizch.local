@@ -15,7 +15,6 @@
               </div>
               <div style="width: 100%;">
                 <b-progress :value="result.right_answers" :max="result.questions_count" show-value></b-progress>
-                <b-btn variant="dark" class="w-100 mt-3" size="sm">Detailed info...</b-btn>
               </div>
             </b-card-body>
           </b-card>

@@ -8,7 +8,8 @@
             <b-nav-item :to="{name: 'New quiz'}" exact-active-class="active" :exact="true"><font-awesome-icon icon="plus-circle" /></b-nav-item>
             <b-nav-item :to="{name: 'My quizzes'}" exact-active-class="active" :exact="true"><font-awesome-icon :icon="['fas', 'bars']" /></b-nav-item>
             <b-nav-item :to="{name: 'My results'}" exact-active-class="active" :exact="true"><font-awesome-icon :icon="['fas', 'table']" /></b-nav-item>
-            <b-nav-item :to="{name: 'Settings'}" exact-active-class="active" :exact="true"><font-awesome-icon :icon="['fas', 'sliders-h']" /></b-nav-item>
+            <b-nav-item :to="{name: 'Statistics'}" exact-active-class="active" :exact="true"><font-awesome-icon icon="chart-bar" /></b-nav-item>
+            <!--<b-nav-item :to="{name: 'Settings'}" exact-active-class="active" :exact="true"><font-awesome-icon :icon="['fas', 'sliders-h']" /></b-nav-item>-->
           </b-navbar-nav>
 
           <b-navbar-nav class="ml-auto">
@@ -30,7 +31,8 @@
               </li>
               <li><router-link tag="a" :to="{ name: 'My quizzes', params: {} }"><font-awesome-icon :icon="['fas', 'bars']" /> My quizzes</router-link></li>
               <li><router-link tag="a" :to="{ name: 'My results', params: {} }"><font-awesome-icon :icon="['fas', 'table']" /> My results</router-link></li>
-              <li><router-link tag="a" :to="{ name: 'Settings', params: {} }"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</router-link></li>
+              <li><router-link tag="a" :to="{ name: 'Statistics', params: {} }"><font-awesome-icon icon="chart-bar" /> Statistics</router-link></li>
+              <!--<li><router-link tag="a" :to="{ name: 'Settings', params: {} }"><font-awesome-icon :icon="['fas', 'sliders-h']" /> Settings</router-link></li>-->
             </ul>
         </b-col>
         <b-col tag="main" role="main" md="9" lg="10" class="content ml-sm-auto px-4 mt-4">

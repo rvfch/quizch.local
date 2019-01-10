@@ -17,7 +17,12 @@ export default new Vuex.Store({
     // auth
     status: '',
     token: localStorage.getItem('token') || null,
-    user: {}
+    user: {},
+
+    //stats
+    excellentCount: 0,
+    goodCount: 0,
+    badCount: 0
   },
   getters: {
     isLoggedIn: state => !!state.token,
@@ -131,6 +136,7 @@ export default new Vuex.Store({
         .then(resp => {
           commit('SET_USER', resp.data)
           this.dispatch('getquizzes')
+          this.dispatch('getresults')
           resolve(resp)
         })
         .catch(err => {
@@ -240,6 +246,21 @@ export default new Vuex.Store({
         axios.get(`/api/results/${state.user.id}`)
               .then(res => {
                 commit('GET_RESULTS', res.data.data)
+                state.excellentCount = 0
+                state.goodCount = 0
+                state.badCount = 0
+                state.results.forEach((item) => {
+                  if (item.resultColor === 'success')
+                    state.excellentCount += 1
+                })
+                state.results.forEach((item) => {
+                  if (item.resultColor === 'warning')
+                    state.goodCount += 1
+                })
+                state.results.forEach((item) => {
+                  if (item.resultColor === 'danger')
+                    state.badCount += 1
+                })
                 commit('LOADING', false)
                 resolve(res)
               }).catch(err => {
@@ -275,13 +296,13 @@ export default new Vuex.Store({
             oldPassword: data.oldPassword,
             password: data.password
         })
-              .then(res => {
-                this.dispatch('getUser')
-                resolve(res)
-              })
-              .catch(err => {
-                reject(err)
-              })
+          .then(res => {
+            this.dispatch('getUser')
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
       })
     }
   }

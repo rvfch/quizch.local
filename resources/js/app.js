@@ -17,6 +17,7 @@ import Myresults from './views/myresults'
 import Settings from './views/settings'
 import Stats from './views/stats'
 import Newquiz from './views/newquiz'
+import Editquiz from './views/editquiz'
 import Quiz from './views/quiz'
 import Auth from './views/auth/auth'
 import NotFoundRoute from './views/NotFoundRoute'
@@ -92,6 +93,14 @@ const router = new VueRouter({
       path: '/newquiz',
       name: 'New quiz',
       component: Newquiz,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/editquiz',
+      name: 'Edit quiz',
+      component: Editquiz,
       meta: {
         requiresAuth: true
       }

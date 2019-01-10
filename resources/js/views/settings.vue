@@ -55,15 +55,7 @@
             oldPassword: this.oldPasswordInput,
           }
           this.$store.dispatch('updateuser', this.data)
-          .then(res => {
-            if (res.data === 'OK') {
-              alert('User updated')
-            } else if (res.data === 'ERROR_OLD_PASSWORD') {
-              alert('Old password is not correct')
-            } else {
-              alert('Something goes wrong...')
-            }
-          })
+          alert('User updated')
         }
       }
     }
