@@ -33,8 +33,8 @@
             </b-tooltip>
           </template>
           <template slot="title" slot-scope="row">
-            <a href="#" :id="row.item.title + 'quiz'"><strong>{{ row.item.title }}</strong></a>
-            <b-tooltip :target="row.item.title + 'quiz'" placement="top">
+            <a href="#" :id="row.item.id + 'quiz'"><strong>{{ row.item.title }}</strong></a>
+            <b-tooltip :target="row.item.id + 'quiz'" placement="top">
               Click to show more info
             </b-tooltip>
           </template>

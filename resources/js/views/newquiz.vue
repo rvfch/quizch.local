@@ -47,15 +47,22 @@
           <b-col>
             <label>Questions: </label>
             <b-card v-if="questions.length > 0" no-body variant="primary" class="mb-3">
-              <b-list-group flush>
-                <b-list-group-item v-for="(question, index) in questions" :key="index">
-                  <span class="align-middle">{{ question.question_text }}</span>
-                  <b-button-group size="sm" class="float-right">
-                    <b-btn v-b-modal.addQuestionModal @click="questionModalShown(index, true)" variant="warning"><font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon></b-btn>
-                    <b-btn @click="deleteQuestion(index)" variant="danger"><font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon></b-btn>
-                  </b-button-group>
+              <draggable class="list-group" element="ul" v-model="questions" :move="onMove">
+                <transition-group type="transition" :name="'flip-list'">
+                  <b-list-group-item v-for="(question, index) in questions" :key="index">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <b-badge pill variant="secondary" class="mr-2">{{ index + 1 }}</b-badge>
+                      <span>{{ question.question_text }}</span>
+                    </div>
+                    <b-button-group size="sm">
+                      <b-btn v-b-modal.addQuestionModal @click="questionModalShown(index, true)" variant="warning"><font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon></b-btn>
+                      <b-btn @click="deleteQuestion(index)" variant="danger"><font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon></b-btn>
+                    </b-button-group>
+                  </div>
                 </b-list-group-item>
-              </b-list-group>
+                </transition-group>
+              </draggable>
             </b-card>
             <b-btn v-b-modal.addQuestionModal @click="questionModalShown()" variant="outline-primary" class="w-100 mb-3 d-flex align-items-center px-0" size="sm">
               <span class="w-25 d-flex pl-2"><font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon></span><span class="w-50">ADD QUESTION</span><span class="w-25"></span></b-btn>
@@ -65,6 +72,7 @@
 </template>
 
 <script>
+
 export default {
     data() {
         return {
@@ -86,6 +94,13 @@ export default {
         }
     },
     methods: {
+      onMove({ relatedContext, draggedContext }) {
+        const relatedElement = relatedContext.element
+        const draggedElement = draggedContext.element
+        return (
+          (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+        )
+      },
       questionModalShown(index, edit = false) {
         if(edit) {
           this.editQuestion(index)

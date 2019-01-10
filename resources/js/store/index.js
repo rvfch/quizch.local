@@ -264,6 +264,25 @@ export default new Vuex.Store({
             reject(err)
           })
       })
+    },
+
+    // user update
+    updateuser({ commit, state }, data) {
+      return new Promise((reject, resolve) =>   {
+        axios.put(`/api/user`, {
+            id: state.user.id,
+            name: data.name,
+            oldPassword: data.oldPassword,
+            password: data.password
+        })
+              .then(res => {
+                this.dispatch('getUser')
+                resolve(res)
+              })
+              .catch(err => {
+                reject(err)
+              })
+      })
     }
   }
 })

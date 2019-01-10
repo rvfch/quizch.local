@@ -2,18 +2,22 @@
   <div v-if="$store.state.loading" class="loading">
     Loading...
   </div>
+  <b-alert show v-else-if="results.length === 0" variant="danger">
+    You don't have passed quizzes.
+  </b-alert>
     <div v-else>
-      <b-alert show v-if="results.length === 0" variant="danger">
-        You don't have passed quizzes.
-      </b-alert>
-        <b-card-group v-else deck class="mb-3" v-for="row in Math.ceil(results.length / 4)" :key="row">
-          <b-card v-for="(result, index) in results.slice((row-1) * 4, row * 4)" :key="index" :bg-variant="result.resultColor" text-variant="white" class="text-center pt-0" style="max-width: 17.5rem;">
-            <div class="d-flex justify-content-center flex-column align-items-center mb-2 mt-0 pt-0">
-              <strong>{{ result.quiz_title }}</strong>
-              <span>{{ result.created_at }}</span>
-            </div>
-            <b-progress :value="result.right_answers" :max="result.questions_count" show-value></b-progress>
-            <b-btn variant="dark" class="w-100 mt-3" size="sm">Detailed info...</b-btn>
+        <b-card-group deck class="mb-3" v-for="row in Math.ceil(results.length / 4)" :key="row">
+          <b-card no-body v-for="(result, index) in results.slice((row-1) * 4, row * 4)" :key="index" :bg-variant="result.resultColor" text-variant="white" class="pt-0" style="max-width: 17.5rem;">
+            <b-card-body class="d-flex flex-column justify-content-between align-items-center" style="padding: 1em !important; margin: 0 !important;">
+              <div style="width: 100%; text-align:center; white-space: nowrap;" class="d-flex flex-column mb-3">
+                <strong>{{ result.quiz_title }}</strong>
+                <span>{{ result.created_at }}</span>
+              </div>
+              <div style="width: 100%;">
+                <b-progress :value="result.right_answers" :max="result.questions_count" show-value></b-progress>
+                <b-btn variant="dark" class="w-100 mt-3" size="sm">Detailed info...</b-btn>
+              </div>
+            </b-card-body>
           </b-card>
         </b-card-group>
     </div>
@@ -32,16 +36,12 @@
         }
       },
       mounted() {
-        this.getResults()
+        this.$store.dispatch('getresults')
+        .then(() => {})
+        .catch(err => console.log(err))
       },
       methods: {
-        getResults() {
-          this.$store.dispatch('getresults')
-          .then(res => {
 
-          })
-          .catch(err => console.log(err))
-        }
       }
     }
 </script>

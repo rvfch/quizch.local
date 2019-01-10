@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Result;
 use App\Http\Resources\Result as ResultResource;
 use Illuminate\Http\Request;
+use App\Quiz;
 
 class ResultController extends Controller
 {

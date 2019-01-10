@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Axios from 'axios'
 import VueClipboard from 'vue-clipboard2'
-import VueMoment from 'vue-moment'
+import Draggable from 'vuedraggable';
 
 import App from './views/App'
 import Myquizzes from './views/myquizzes'
@@ -22,11 +22,11 @@ import Auth from './views/auth/auth'
 import NotFoundRoute from './views/NotFoundRoute'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEnvelope, faBell, faLink, faEye, faPlusCircle, faCopy, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faBell, faLink, faEye, faPlusCircle, faCopy, faPlus, faCheck, faList, faBars, faTable, faChartBar, faSlidersH, faSignInAlt, faSignOutAlt, faUser, faEdit, faTrashAlt, faLock, faLockOpen, faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store/index'
 
-library.add(faEnvelope, faBell, faLink, faEye, faPlusCircle, faCopy, faList, faBars, faTable, faChartBar, faSlidersH, faSignOutAlt, faUser, faEdit, faTrashAlt,
+library.add(faEnvelope, faBell, faLink, faEye, faPlusCircle, faCopy, faList, faBars, faTable, faChartBar, faSlidersH, faSignInAlt, faSignOutAlt, faUser, faEdit, faTrashAlt,
             faLock, faLockOpen, faClock, faCheck, faPlus)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
@@ -37,7 +37,7 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 Vue.use(VueClipboard)
-Vue.use(VueMoment)
+Vue.component('draggable', Draggable)
 // setup auth
 Vue.prototype.$http = Axios
 const token = localStorage.getItem('token')

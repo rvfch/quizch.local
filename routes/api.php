@@ -28,7 +28,8 @@ Route::post('/login', 'AuthController@login');
 Route::middleware('auth:api')->post('/logout', 'AuthController@logout');
 // register
 Route::post('/register', 'AuthController@register');
-
+// update
+Route::put('/user', 'SettingsController@store');
 
 /*
 *   Quiz API
@@ -60,4 +61,4 @@ Route::post('result', 'ResultController@store');
 // Update user's result
 Route::put('result', 'ResultController@sotre');
 // Delete user's result
-Route::delete('results/{user_id}', 'ResultController@destroy');
+Route::delete('results/{result_id}', 'ResultController@destroy');
